@@ -10,6 +10,7 @@ let nextAudioTime = 0;
 let liveTimer = null;
 let setupTarget = '';
 let setupFilename = '';
+let setupMessage = '';
 let graphSamples = [];
 let lastPerfStamp = -1;
 let controlTimer = null;
@@ -74,8 +75,10 @@ function renderPreset() {
   drawGraph();
   setupTarget = '';
   setupFilename = '';
+  setupMessage = '';
   $('install-config').hidden = true;
   $('download-config').hidden = true;
+  $('manual-host-row').hidden = true;
   $('setup-result').textContent = manifest.id === 'example' ?
     'Example works offline. Follow the integration guide to add a device preset.' :
     'Prepare pairing, then copy the generated device config to the build’s documented location.';
@@ -121,11 +124,12 @@ async function refresh() {
     $('connection-detail').textContent = state.discovery || 'Waiting for adapter status';
     $('link').textContent = state.linkEnabled ? 'Pause PC link' : 'Resume PC link';
     $('prepare').disabled = !state.setupAvailable;
-    $('setup-result').textContent = setupFilename ?
+    $('manual-host-row').hidden = !state.manualHostAvailable || !setupFilename;
+    $('setup-result').textContent = setupMessage || (setupFilename ?
       `Pairing file ready. Copy ${setupFilename} to ${setupTarget || 'the path documented by this build'}.` :
       manifest.id === 'example' ? 'Example works offline. Follow the integration guide to add a device preset.' :
       state.setupAvailable ? 'Prepare pairing to generate a private device config.' :
-      'This adapter needs its own setup instructions; see its preset documentation.';
+      'This adapter needs its own setup instructions; see its preset documentation.');
     for (const [id, capability] of [['capture','screenshot'], ['live','stream'], ['sound','audio'],
                                      ['report','report'], ['log','log'], ['perf-request','perf'],
                                      ['console','console'], ['controls-enabled','controller']]) {
@@ -329,10 +333,12 @@ async function prepareSetup() {
     const result = await api('/api/setup', {});
     setupTarget = result.deviceConfigPath || '';
     setupFilename = result.configFile;
+    setupMessage = `Ready: ${setupFilename}. Copy it to ${setupTarget || 'the path documented by this build'}.`;
     $('download-config').hidden = false;
     $('install-config').hidden = !setupTarget || !window.showDirectoryPicker;
-    $('setup-result').textContent = `Ready: ${setupFilename}. Copy it to ${setupTarget || 'the path documented by this build'}.`;
-  } catch (error) { $('setup-result').textContent = error.message; }
+    $('manual-host-row').hidden = !state?.manualHostAvailable;
+    $('setup-result').textContent = setupMessage;
+  } catch (error) { setupMessage = error.message; $('setup-result').textContent = setupMessage; }
 }
 
 async function configBlob() {
@@ -353,8 +359,9 @@ async function installConfig() {
     const writable = await file.createWritable();
     await writable.write(await configBlob());
     await writable.close();
-    $('setup-result').textContent = `Copied pairing file to ${setupTarget} in the selected folder. Start the integrated build.`;
-  } catch (error) { $('setup-result').textContent = error.message; }
+    setupMessage = `Copied pairing file to ${setupTarget} in the selected folder. Start the integrated build.`;
+    $('setup-result').textContent = setupMessage;
+  } catch (error) { setupMessage = error.message; $('setup-result').textContent = setupMessage; }
 }
 
 function clearControls() {
@@ -458,9 +465,25 @@ $('setup-hide').addEventListener('click', () => { $('setup').hidden = true; $('s
 $('setup-open').addEventListener('click', () => { $('setup').hidden = false; $('setup-open').hidden = true; });
 $('prepare').addEventListener('click', prepareSetup);
 $('download-config').addEventListener('click', async () => {
-  try { saveBlob(await configBlob(), setupFilename); } catch (error) { $('setup-result').textContent = error.message; }
+  try { saveBlob(await configBlob(), setupFilename); setupMessage = `Downloaded ${setupFilename}. Copy it to ${setupTarget}.`; $('setup-result').textContent = setupMessage; }
+  catch (error) { setupMessage = error.message; $('setup-result').textContent = setupMessage; }
 });
 $('install-config').addEventListener('click', installConfig);
+$('use-device-host').addEventListener('click', async () => {
+  try {
+    await api('/api/setup/host', {host: $('device-host').value.trim()});
+    setupMessage = 'Device address saved privately. Searching for the paired build.';
+  } catch (error) { setupMessage = error.message; }
+  $('setup-result').textContent = setupMessage;
+});
+$('auto-device-host').addEventListener('click', async () => {
+  try {
+    await api('/api/setup/host', {host: 'auto'});
+    $('device-host').value = '';
+    setupMessage = 'Automatic private-network search resumed.';
+  } catch (error) { setupMessage = error.message; }
+  $('setup-result').textContent = setupMessage;
+});
 $('live').addEventListener('change', () => { stopLive(); if ($('live').checked) liveTick(); });
 $('sound').addEventListener('change', async () => {
   if ($('sound').checked) {

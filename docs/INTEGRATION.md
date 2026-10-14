@@ -33,10 +33,9 @@ ships no connected preset or device data.
    final subfolder; the viewer creates the declared path. Use **Download device
    config** if the browser lacks folder access. Start the matching build.
 4. The PC searches only its current private local networks. If it has multiple
-   interfaces or a segmented network, set `host` to the device's current
-   private IPv4 in ignored `local/<preset-id>/pairing.json`, then click **Retry
-   connection**. Keep that file private. The default `host: auto` needs no
-   manual address.
+   interfaces or a segmented network, enter the device's current private IPv4
+   in the setup guide and choose **Use address**. This changes only ignored
+   local pairing data. **Search automatically** restores the default.
 5. Exercise a short input, full capture, optional log/report, and live preview.
    Confirm the device remains playable while streaming and that closing the
    browser releases held input.

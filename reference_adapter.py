@@ -70,6 +70,19 @@ class ReferenceAdapter:
         self._retry.set()
         return {"configPath": str(self.device_path)}
 
+    def set_host(self, host):
+        if host != "auto" and not private_ipv4(host):
+            raise ValueError("Use a private device IPv4 address or automatic search")
+        config = self._config()
+        if not config:
+            raise ValueError("Prepare pairing first")
+        config["host"] = host
+        temporary = self.config_path.with_suffix(".tmp")
+        temporary.write_text(json.dumps(config) + "\n", encoding="ascii")
+        temporary.replace(self.config_path)
+        self.retry()
+        return host
+
     def _interfaces(self):
         candidates = []
         try:

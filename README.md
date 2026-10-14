@@ -25,6 +25,9 @@ network connection. Once a trusted device preset is installed, select it and:
 3. Start the matching homebrew build and enable its PC link. The reference
    adapter searches the current private local network and connects once the
    device proves it knows the token. **Retry connection** starts a fresh scan.
+   If automatic search misses a device, enter the private device IPv4 address
+   in the setup guide and choose **Use address**. The viewer saves that choice
+   only in ignored local pairing data; **Search automatically** clears it.
 
 The integrated build must implement the [RP2 protocol](docs/PROTOCOL.md), or
 provide its own trusted Python adapter. A browser cannot add support to a

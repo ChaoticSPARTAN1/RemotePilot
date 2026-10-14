@@ -300,7 +300,8 @@ def _state():
             "discovery": status["discovery"], "host": status["host"],
             "meta": status["meta"], "perf": status["perf"], "tasks": tasks,
             "captures": captures, "frameVersion": frame_version, "audioVersion": audio_version,
-            "setupAvailable": bool(runtime and callable(getattr(runtime.adapter, "setup", None)))}
+            "setupAvailable": bool(runtime and callable(getattr(runtime.adapter, "setup", None))),
+            "manualHostAvailable": bool(runtime and callable(getattr(runtime.adapter, "set_host", None)))}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -434,6 +435,11 @@ class Handler(BaseHTTPRequestHandler):
                 result = runtime.setup()
                 SETUP_FILES[_selected()] = runtime.adapter_local_dir / result["configFile"]
                 return self._json(result)
+            if path == "/api/setup/host":
+                runtime = _runtime()
+                if not runtime:
+                    raise ValueError("Select an installed device preset first")
+                return self._json({"host": runtime.set_host(data.get("host"))})
             if path == "/api/stream":
                 return self._json({"queued": _stream()})
             if path == "/api/capture":

@@ -32,6 +32,11 @@ class PortableTests(unittest.TestCase):
             self.assertEqual(len(adapter._config()["token"]), 64)
             self.assertEqual(adapter.setup(), first)
             self.assertEqual(config.read_bytes(), original)
+            with self.assertRaises(ValueError):
+                adapter.set_host("192.0.2.1")
+            self.assertEqual(adapter.set_host("127.0.0.1"), "127.0.0.1")
+            self.assertEqual(adapter._config()["host"], "127.0.0.1")
+            self.assertEqual(adapter.set_host("auto"), "auto")
 
     def test_installed_preset_one_step_setup(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -47,6 +52,7 @@ class PortableTests(unittest.TestCase):
             runtime = PluginRuntime(manifest, root / "presets", root / "local")
             result = runtime.setup()
             self.assertEqual(result["deviceConfigPath"], "device/private.cfg")
+            self.assertEqual(runtime.set_host("auto"), "auto")
             config = runtime.adapter_local_dir / result["configFile"]
             self.assertTrue(config.is_file())
             self.assertTrue(config.read_bytes().startswith(b"app_id=sample\n"))

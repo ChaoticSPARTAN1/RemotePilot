@@ -137,6 +137,12 @@ class PluginRuntime:
             raise ValueError("This adapter does not support a fresh connection search")
         action()
 
+    def set_host(self, host):
+        action = getattr(self.adapter, "set_host", None)
+        if not callable(action):
+            raise ValueError("This adapter does not support manual device addresses")
+        return action(host)
+
     def set_network_host(self, host):
         if self.adapter is None:
             return
