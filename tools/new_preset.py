@@ -17,6 +17,8 @@ def main():
     parser.add_argument("--name", required=True, help="viewer label")
     parser.add_argument("--width", required=True, type=int, help="composite frame width")
     parser.add_argument("--height", required=True, type=int, help="composite frame height")
+    parser.add_argument("--layout", choices=("screen", "dual-screen"), default="screen",
+                        help="viewer presentation; dual-screen splits a stacked frame")
     parser.add_argument("--device-config-path", required=True, help="relative path within the device storage root")
     parser.add_argument("--touch", help="x,y,width,height,deviceWidth,deviceHeight")
     parser.add_argument("--audio-rate", type=int, help="mono PCM16 sample rate, if live audio is available")
@@ -35,7 +37,7 @@ def main():
         parser.error("Specify each implemented capability once")
     data.update({"id": args.id, "name": args.name, "mark": args.name[:1].upper(), "order": 10,
                  "transport": "python-v1", "capabilities": capabilities,
-                 "display": {"width": args.width, "height": args.height},
+                 "display": {"width": args.width, "height": args.height, "layout": args.layout},
                  "buttons": [name.strip().upper() for name in args.buttons.split(",") if name.strip()],
                  "setup": {"deviceConfigPath": args.device_config_path}})
     if args.touch:

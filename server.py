@@ -27,6 +27,7 @@ SELECTION = LOCAL / "selection.json"
 STATIC = {"/": ("viewer.html", "text/html; charset=utf-8"),
           "/viewer.js": ("viewer.js", "text/javascript; charset=utf-8"),
           "/viewer.css": ("viewer.css", "text/css; charset=utf-8"),
+          "/device.css": ("device.css", "text/css; charset=utf-8"),
           "/docs/INTEGRATION.md": ("docs/INTEGRATION.md", "text/plain; charset=utf-8")}
 KINDS = {"console", "input", "gamepad", "touch", "shot", "stream", "report", "log", "perf", "preview"}
 CAP_FOR = {"shot": "screenshot", "stream": "stream", "gamepad": "controller"}

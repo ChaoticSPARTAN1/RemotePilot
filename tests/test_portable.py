@@ -9,6 +9,7 @@ import threading
 import unittest
 
 import presets
+from build_portable import FILES
 import reference_transport as rp
 from reference_adapter import ReferenceAdapter
 from plugin_runtime import PluginRuntime
@@ -17,8 +18,11 @@ import server
 
 class PortableTests(unittest.TestCase):
     def test_checked_in_presets_and_manifest(self):
-        self.assertEqual([item["id"] for item in presets.all_presets()], ["example"])
+        self.assertEqual([path for path in FILES if path.startswith("presets/")],
+                         ["presets/example/manifest.json"])
+        self.assertIn("example", [item["id"] for item in presets.all_presets()])
         self.assertFalse((presets.PRESETS / "example" / "adapter.py").exists())
+        self.assertEqual(presets.all_presets()[0]["display"].get("layout", "screen"), "screen")
 
     def test_pairing_is_private_and_reusable(self):
         manifest = {"id": "sample", "capabilities": []}
@@ -121,7 +125,7 @@ class PortableTests(unittest.TestCase):
                     self.assertEqual(error.code, 403)
                     error.close()
             with urlopen(Request(base + "/api/presets", headers={"X-Remote-Pilot-Viewer": "1"})) as response:
-                self.assertEqual([p["id"] for p in json.load(response)["presets"]], ["example"])
+                self.assertIn("example", [p["id"] for p in json.load(response)["presets"]])
             with self.assertRaises(ValueError):
                 server._validate_action("gamepad", {"buttons": 0, "lx": 0, "ly": 0, "rx": 0, "ry": 0, "lt": -1, "rt": 0, "frames": 1})
         finally:

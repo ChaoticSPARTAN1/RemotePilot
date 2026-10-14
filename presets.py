@@ -45,6 +45,8 @@ def _manifest(path):
     display = data.get("display")
     if not isinstance(display, dict) or not _size(display.get("width")) or not _size(display.get("height")):
         raise ValueError(f"Invalid display: {path}")
+    if display.get("layout", "screen") not in ("screen", "dual-screen"):
+        raise ValueError(f"Invalid display layout: {path}")
     touch = display.get("touch")
     if touch is not None:
         if "touch" not in caps or not isinstance(touch, dict):
