@@ -105,7 +105,7 @@ function renderPreset() {
   if (!['new', 'original', 'generic'].includes(displayModel)) displayModel = 'new';
   $('device-label').textContent = manifest.name;
   $('display').classList.toggle('touch-ready', Boolean(display.touch));
-  $('display-title').textContent = `${manifest.name} display`;
+  $('display-title').textContent = manifest.id === 'example' ? 'Example display' : 'Live device view';
   $('display-help').textContent = manifest.id === 'example' ?
     'Tap or drag the lower screen to preview touch coordinates. Example sends nothing to a device.' :
     display.touch ? 'Click or drag within the touch region to send bounded device coordinates.' :
