@@ -60,6 +60,11 @@ def _manifest(path):
     if not isinstance(buttons, list) or len(buttons) > 32 or len(set(buttons)) != len(buttons) or any(
             not isinstance(item, str) or not BUTTON.fullmatch(item) for item in buttons):
         raise ValueError(f"Invalid button list: {path}")
+    bits = data.get("buttonBits", {})
+    if not isinstance(bits, dict) or (bits and "controller" not in caps) or any(
+            name not in buttons or type(index) is not int or not 0 <= index <= 15
+            for name, index in bits.items()) or len(set(bits.values())) != len(bits):
+        raise ValueError(f"Invalid controller button mapping: {path}")
     theme = data.get("theme")
     if not isinstance(theme, dict) or set(theme) != set(THEME_FIELDS) or any(
             not isinstance(value, str) or not COLOR.fullmatch(value) for value in theme.values()):

@@ -40,6 +40,7 @@
 .device-face button:nth-child(4){bottom:0;left:32%}
 .device-face button,.device-dpad button{background:var(--surface2);border:1px solid var(--line);color:var(--text);box-shadow:1px 3px 5px #0008}
 .device-face button:hover,.device-dpad button:hover{background:var(--accent);border-color:var(--accent2);color:var(--background)}
+[data-device-button].chord-selected,[data-button].chord-selected{background:var(--accent)!important;border-color:var(--accent2)!important;color:var(--background)!important;box-shadow:0 0 0 2px var(--accent2),0 0 12px var(--glow)!important}
 .display.dual:not(.controls-on) .device-stick{cursor:default;opacity:.7}
 .device-analog{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 8% 0;font-size:.59rem;font-weight:800;letter-spacing:.12em;color:var(--muted)}
 .device-home{color:var(--accent2);opacity:.65}

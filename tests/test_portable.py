@@ -25,6 +25,21 @@ class PortableTests(unittest.TestCase):
         self.assertFalse((presets.PRESETS / "example" / "adapter.py").exists())
         self.assertEqual(presets.all_presets()[0]["display"]["layout"], "dual-screen")
 
+    def test_controller_chord_mapping_is_bounded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "example" / "manifest.json"
+            path.parent.mkdir()
+            data = dict(presets.all_presets()[0])
+            data["capabilities"] = ["touch", "controller", "input"]
+            data["buttons"] = ["A", "B"]
+            data["buttonBits"] = {"A": 0, "B": 1}
+            path.write_text(json.dumps(data), encoding="utf-8")
+            self.assertEqual(presets._manifest(path)["buttonBits"], data["buttonBits"])
+            data["buttonBits"]["B"] = 0
+            path.write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                presets._manifest(path)
+
     def test_pairing_is_private_and_reusable(self):
         manifest = {"id": "sample", "capabilities": []}
         with tempfile.TemporaryDirectory() as directory:

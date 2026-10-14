@@ -29,6 +29,9 @@ ships no connected preset or device data.
    a New model shell; the user can select the Original model or the raw
    composite frame. This shell is CSS and ships no hardware artwork. Use
    `--buttons` to specify names your build accepts for bounded digital input.
+   A preset with `controller` can declare `buttonBits`, mapping button names
+   to its 16-bit controller mask positions. Ctrl+click uses this mapping to
+   send one simultaneous press when Ctrl is released.
    The script validates the manifest and creates `presets/<id>/manifest.json`
    plus a thin adapter. It generates **no token, device address, or port in
    source**.

@@ -20,6 +20,8 @@ let perfChanging = false;
 let controlTimer = null;
 let lastControl = '';
 let pointerButtons = 0;
+const chordButtons = new Set();
+let chordUntil = 0;
 let lastTouchPosition = null;
 let displayModel = 'new';
 const sticks = {move: {x: 0, y: 0}, look: {x: 0, y: 0}};
@@ -45,6 +47,45 @@ function feedback(message) { $('feedback').textContent = message; }
 function enabled(capability) {
   return Boolean(manifest && state && state.linkEnabled && state.connected &&
                  manifest.capabilities.includes(capability));
+}
+
+function cancelChord() {
+  chordButtons.clear();
+  document.querySelectorAll('[data-button],[data-device-button]').forEach(element =>
+    element.classList.remove('chord-selected'));
+}
+
+function buttonClick(event, name) {
+  if (event.ctrlKey) {
+    event.preventDefault();
+    if (!enabled('controller') || !enabled('input') ||
+        !Object.hasOwn(manifest.buttonBits || {}, name)) {
+      feedback('This preset does not support button chords.');
+      return;
+    }
+    if (chordButtons.has(name)) chordButtons.delete(name); else chordButtons.add(name);
+    document.querySelectorAll('[data-button],[data-device-button]').forEach(element =>
+      element.classList.toggle('chord-selected',
+        chordButtons.has(element.dataset.button || element.dataset.deviceButton)));
+    feedback(chordButtons.size ?
+      `Queued together: ${[...chordButtons].join(' + ')}. Release Ctrl to press.` :
+      'No buttons queued. Keep Ctrl held and click a button.');
+  } else action('input', {button: name, frames: 1});
+}
+
+async function releaseChord() {
+  const names = [...chordButtons];
+  cancelChord();
+  if (!names.length || !enabled('controller') || !enabled('input')) return;
+  const bits = manifest.buttonBits || {};
+  const buttons = names.reduce((mask, name) => mask | (1 << bits[name]), 0);
+  chordUntil = performance.now() + 350;
+  try {
+    await api('/api/control', {kind: 'gamepad', payload: {
+      buttons, lx: 0, ly: 0, rx: 0, ry: 0, lt: 0, rt: 0, frames: 8
+    }});
+    feedback(`Pressed ${names.join(' + ')} together.`);
+  } catch (error) { feedback(error.message); }
 }
 
 function setColors(theme) {
@@ -101,6 +142,7 @@ function applyDisplayModel() {
 }
 
 function renderPreset() {
+  cancelChord();
   if (!manifest) return;
   const display = manifest.display;
   $('display').style.aspectRatio = `${display.width} / ${display.height}`;
@@ -146,11 +188,11 @@ function renderPreset() {
     button.type = 'button';
     button.textContent = name.replaceAll('_', ' ');
     button.dataset.button = name;
-    button.addEventListener('click', () => action('input', {button: name, frames: 1}));
+    button.addEventListener('click', event => buttonClick(event, name));
     buttons.append(button);
   }
   $('control-help').textContent = manifest.buttons?.length ?
-    'Each button sends one short press. Controller snapshots are opt in.' :
+    'Each button sends one short press. Hold Ctrl, click buttons, then release Ctrl for a simultaneous press when supported.' :
     'The integrated build has not declared manual buttons.';
   applyDisplayModel();
   renderIdle();
@@ -473,6 +515,7 @@ async function installConfig() {
 }
 
 function clearControls() {
+  cancelChord();
   pointerButtons = 0;
   for (const key of Object.keys(sticks)) { sticks[key] = {x: 0, y: 0}; updateStickVisual(key); }
   if (lastControl && manifest?.capabilities.includes('controller')) sendGamepad(true);
@@ -519,6 +562,7 @@ function gamepadPayload(forceZero = false) {
 }
 
 async function sendGamepad(forceZero = false) {
+  if (!forceZero && performance.now() < chordUntil) return;
   if (!forceZero && (!$('controls-enabled').checked || !document.hasFocus() || document.hidden || !enabled('controller'))) return;
   const payload = gamepadPayload(forceZero);
   const value = JSON.stringify(payload);
@@ -660,11 +704,14 @@ $('colors-reset').addEventListener('click', async () => {
   catch (error) { feedback(error.message); }
 });
 for (const element of document.querySelectorAll('[data-stick]')) stickPointer(element, element.dataset.stick);
-for (const element of document.querySelectorAll('[data-device-button]')) element.addEventListener('click', () => {
+for (const element of document.querySelectorAll('[data-device-button]')) element.addEventListener('click', event => {
   const button = element.dataset.deviceButton;
   if ($('controls-enabled').checked && enabled('input') &&
       manifest.buttons?.includes(button) && modelAllowsButton(button))
-    action('input', {button, frames: 1});
+    buttonClick(event, button);
+});
+document.addEventListener('keyup', event => {
+  if (event.key === 'Control') releaseChord();
 });
 let lastTouch = 0;
 $('display').addEventListener('pointerdown', event => { if (!touchPosition(event)) return; $('display').setPointerCapture(event.pointerId); sendTouch(event, true); });
