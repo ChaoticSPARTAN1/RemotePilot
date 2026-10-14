@@ -26,7 +26,7 @@ ships no connected preset or device data.
    region and `--audio-rate <sample-rate>` if live frames include PCM. Use
    `--layout dual-screen` when the image is two equal-height screens stacked
    vertically, with a centered lower touch screen. The viewer starts with
-   a New model shell; the user can select the Original model or the raw
+   a New 3D 2 Screen shell; the user can select Original 3D 2 Screen or the raw
    composite frame. This shell is CSS and ships no hardware artwork. Use
    `--buttons` to specify names your build accepts for bounded digital input.
    A preset with `controller` can declare `buttonBits`, mapping button names

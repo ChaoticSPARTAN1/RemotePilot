@@ -51,9 +51,9 @@ with `python tools/new_preset.py --help`; see the
   appear only when the preset advertises them.
 - **Pause PC link** stops host actions. The device's own session switch must
   also allow remote access.
-- **Device view** starts with a New model shell for stacked dual-screen
+- **Device view** starts with a New 3D 2 Screen shell for stacked dual-screen
   presets, including a circle pad, C stick, and ZL/ZR indicators. Switch to
-  **Original model** to hide the second stick and ZL/ZR, or **Generic frame** to
+  **Original 3D 2 Screen** to hide the second stick and ZL/ZR, or **Generic frame** to
   inspect the uncropped image. The offline Example preset shows these layouts
   and previews lower-screen touch coordinates without contacting a device.
 - **Preset colors** lets you save separate background, surface, accent, and

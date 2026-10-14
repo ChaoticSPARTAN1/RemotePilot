@@ -125,7 +125,7 @@ function applyDisplayModel() {
   $('dual-device').classList.toggle('original', displayModel === 'original');
   document.body.classList.toggle('original-model', dual && displayModel === 'original');
   $('display').setAttribute('aria-label', shell ?
-    `${displayModel === 'new' ? 'New' : 'Original'} model preview` : 'Generic device frame');
+    `${displayModel === 'new' ? 'New 3D 2 Screen' : 'Original 3D 2 Screen'} preview` : 'Generic device frame');
   $('frame').hidden = shell || !frameUrl;
   $('placeholder').hidden = shell || Boolean(frameUrl);
   for (const button of $('buttons').querySelectorAll('button')) {
