@@ -8,6 +8,7 @@ let audioVersion = 0;
 let audioContext = null;
 let nextAudioTime = 0;
 let liveTimer = null;
+let mediaTimer = null;
 let setupTarget = '';
 let setupFilename = '';
 let setupMessage = '';
@@ -207,8 +208,6 @@ async function refresh() {
       if ($('controls-enabled').checked) $('controls-enabled').checked = false;
       clearControls();
     }
-    if (state.frameVersion > frameVersion) await loadFrame();
-    if ($('sound').checked && state.audioVersion > audioVersion) await loadAudio();
     renderActivity(state.tasks, state.captures);
     updateGraph(state.perf);
     $('controller-state').textContent = $('controls-enabled').checked ?
@@ -220,7 +219,7 @@ async function refresh() {
 }
 
 async function loadFrame() {
-  const response = await fetch('/api/frame', {headers: header, cache: 'no-store'});
+  const response = await fetch(`/api/frame?since=${frameVersion}`, {headers: header, cache: 'no-store'});
   if (response.status === 204 || !response.ok) return;
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
@@ -257,9 +256,20 @@ async function loadAudio() {
   const source = audioContext.createBufferSource();
   source.buffer = output;
   source.connect(audioContext.destination);
-  nextAudioTime = Math.max(audioContext.currentTime + .02, Math.min(nextAudioTime, audioContext.currentTime + .35));
+  nextAudioTime = Math.max(audioContext.currentTime + .02, Math.min(nextAudioTime, audioContext.currentTime + .12));
   source.start(nextAudioTime);
   nextAudioTime += output.duration;
+}
+
+async function mediaTick() {
+  try {
+    if (state?.connected && state.linkEnabled && !document.hidden) {
+      const updates = [loadFrame()];
+      if ($('sound').checked) updates.push(loadAudio());
+      await Promise.all(updates);
+    }
+  } catch (error) { feedback(error.message); }
+  mediaTimer = setTimeout(mediaTick, $('live').checked ? 80 : 250);
 }
 
 function stopLive() {
@@ -554,6 +564,7 @@ async function init() {
     await refresh();
   } catch (error) { feedback(error.message); }
   setInterval(refresh, 1000);
+  mediaTick();
   controlTimer = setInterval(() => sendGamepad(), 100);
 }
 

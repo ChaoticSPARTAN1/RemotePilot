@@ -331,7 +331,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
-        self.send_header("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; "
+        self.send_header("Content-Security-Policy", "default-src 'self'; img-src 'self' data: blob:; "
                          "style-src 'self'; script-src 'self'; connect-src 'self'; "
                          "object-src 'none'; base-uri 'none'; frame-ancestors 'none'")
         for key, value in (extra or {}).items():
@@ -365,9 +365,15 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"groups": []})
             return self._send(200, catalog.read_bytes())
         if path.path == "/api/frame":
+            try:
+                since = int(parse_qs(path.query).get("since", ["0"])[0])
+                if since < 0:
+                    raise ValueError
+            except ValueError:
+                return self._error(400, "Invalid frame sequence")
             with STATE_LOCK:
                 frame = FRAMES.get(_selected())
-            if not frame:
+            if not frame or frame[0] <= since:
                 return self._send(204)
             return self._send(200, frame[2], frame[1], {"X-Frame-Version": str(frame[0])})
         if path.path == "/api/audio":

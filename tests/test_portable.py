@@ -117,6 +117,7 @@ class PortableTests(unittest.TestCase):
         try:
             with urlopen(base + "/") as response:
                 self.assertEqual(response.status, 200)
+                self.assertIn("img-src 'self' data: blob:", response.headers["Content-Security-Policy"])
             for request in (base + "/api/state", Request(base + "/api/state", headers={
                     "X-Remote-Pilot-Viewer": "1", "Origin": "http://example.invalid"})):
                 try:
@@ -127,9 +128,18 @@ class PortableTests(unittest.TestCase):
                     error.close()
             with urlopen(Request(base + "/api/presets", headers={"X-Remote-Pilot-Viewer": "1"})) as response:
                 self.assertIn("example", [p["id"] for p in json.load(response)["presets"]])
+            selected = server._selected()
+            with server.STATE_LOCK:
+                server.FRAMES[selected] = (2, "image/bmp", b"BMtest")
+            with urlopen(Request(base + "/api/frame?since=2", headers={"X-Remote-Pilot-Viewer": "1"})) as response:
+                self.assertEqual(response.status, 204)
+            with urlopen(Request(base + "/api/frame?since=1", headers={"X-Remote-Pilot-Viewer": "1"})) as response:
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.headers["X-Frame-Version"], "2")
             with self.assertRaises(ValueError):
                 server._validate_action("gamepad", {"buttons": 0, "lx": 0, "ly": 0, "rx": 0, "ry": 0, "lt": -1, "rt": 0, "frames": 1})
         finally:
+            server.FRAMES.pop(server._selected(), None)
             httpd.shutdown()
             httpd.server_close()
             thread.join(timeout=3)
