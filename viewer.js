@@ -11,6 +11,7 @@ let liveTimer = null;
 let setupTarget = '';
 let setupFilename = '';
 let setupMessage = '';
+let catalogLoad = 0;
 let graphSamples = [];
 let lastPerfStamp = -1;
 let controlTimer = null;
@@ -139,6 +140,7 @@ async function refresh() {
     $('diagnostic').querySelector('[value="log"]').disabled = !manifest.capabilities.includes('log');
     $('diagnostic').querySelector('[value="report"]').disabled = !manifest.capabilities.includes('report');
     for (const button of $('buttons').querySelectorAll('button')) button.disabled = !enabled('input');
+    for (const button of $('catalog').querySelectorAll('button')) button.disabled = !enabled('preview');
     if (!connected) {
       $('live').checked = false;
       stopLive();
@@ -257,12 +259,16 @@ function saveBlob(blob, filename) {
 }
 
 async function loadCatalog() {
+  const load = ++catalogLoad;
+  const preset = manifest;
   const panel = $('catalog-panel');
   panel.hidden = true;
   $('catalog').replaceChildren();
   if (!manifest.capabilities.includes('catalog')) return;
   try {
     const data = await api('/api/catalog');
+    if (load !== catalogLoad || manifest !== preset) return;
+    $('catalog').replaceChildren();
     for (const group of data.groups || []) {
       const section = document.createElement('section');
       section.className = 'catalog-group';
@@ -469,9 +475,17 @@ $('download-config').addEventListener('click', async () => {
   catch (error) { setupMessage = error.message; $('setup-result').textContent = setupMessage; }
 });
 $('install-config').addEventListener('click', installConfig);
+function localIPv4(value) {
+  const parts = value.split('.');
+  if (parts.length !== 4 || parts.some(part => !/^(0|[1-9]\d{0,2})$/.test(part) || Number(part) > 255)) return false;
+  const [a, b] = parts.map(Number);
+  return a === 10 || a === 127 || a === 172 && b >= 16 && b <= 31 || a === 192 && b === 168;
+}
 $('use-device-host').addEventListener('click', async () => {
   try {
-    await api('/api/setup/host', {host: $('device-host').value.trim()});
+    const host = $('device-host').value.trim();
+    if (!localIPv4(host)) throw new Error('Enter the private IPv4 shown by the device, then try again.');
+    await api('/api/setup/host', {host});
     setupMessage = 'Device address saved privately. Searching for the paired build.';
   } catch (error) { setupMessage = error.message; }
   $('setup-result').textContent = setupMessage;
