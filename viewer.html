@@ -61,7 +61,7 @@
         <label>Full capture includes <select id="diagnostic" aria-label="Full capture includes"><option value="">Screens only</option><option value="log">Screens + device log</option><option value="report">Screens + report</option></select></label>
       </div>
       <p class="micro capture-explain">This choice applies when you press Grab full capture. Device logs and reports appear only if the selected build supports them.</p>
-      <div class="perf"><div class="heading"><h3>Performance</h3><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" width="640" height="140" aria-label="Recent frame times"></canvas><p class="micro">Frame interval (light) · work time (accent) · 16.7 ms guide</p></div>
+      <div class="perf"><div class="heading"><h3>Performance</h3><label><input id="perf-toggle" type="checkbox"> Performance capture</label><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" hidden width="640" height="140" aria-label="Recent frame times"></canvas><p class="micro">Frame interval (light) · work time (accent) · 16.7 ms guide · <span id="perf-scale">0–33.4 ms</span></p></div>
     </section>
 
     <div class="side">

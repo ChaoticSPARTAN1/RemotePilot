@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import sys
 import threading
+import performance_capture
 
 
 class PluginRuntime:
@@ -86,7 +87,10 @@ class PluginRuntime:
 
     def status(self):
         with self._lock:
-            return dict(self._status)
+            value = dict(self._status)
+            if not performance_capture.enabled(self.adapter_local_dir):
+                value["perf"] = None
+            return value
 
     def run_forever(self):
         if self.adapter is None:

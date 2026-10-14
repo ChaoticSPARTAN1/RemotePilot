@@ -9,6 +9,7 @@ import socket
 import struct
 import threading
 import time
+import performance_capture
 
 from reference_transport import exchange, private_ipv4, TransportError
 
@@ -31,6 +32,9 @@ class ReferenceAdapter:
         self._perf = None
         self._discovery = "Prepare pairing to begin"
         self._event_baseline = None
+
+    def performance_enabled(self):
+        return performance_capture.enabled(self.local_dir)
 
     def set_active(self, callback):
         self._active = callback
@@ -155,7 +159,7 @@ class ReferenceAdapter:
             raise ValueError("Invalid capture event sequence")
         safe_meta = {key: data[key] for key in ("label", "state", "captureSequence") if key in data}
         perf = None
-        if "perf" in self.manifest["capabilities"]:
+        if self.performance_enabled() and "perf" in self.manifest["capabilities"]:
             result = exchange(host, port, token, app_id, "perf", timeout=5)
             perf = json.loads(result.decode("utf-8")) if result else None
         with self._lock:
@@ -164,7 +168,7 @@ class ReferenceAdapter:
             self._host = host
             self._last_seen = time.monotonic()
             self._meta = safe_meta
-            self._perf = perf
+            self._perf = perf if self.performance_enabled() else None
             self._discovery = "Connected to paired device"
         self.cache_path.write_text(json.dumps({"host": host}) + "\n", encoding="ascii")
         if prior is not None and sequence != prior and sequence and self._event_sink:

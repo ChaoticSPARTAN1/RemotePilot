@@ -14,7 +14,9 @@ let setupFilename = '';
 let setupMessage = '';
 let catalogLoad = 0;
 let graphSamples = [];
+let graphScale = 33.4;
 let lastPerfStamp = -1;
+let perfChanging = false;
 let controlTimer = null;
 let lastControl = '';
 let pointerButtons = 0;
@@ -124,6 +126,7 @@ function renderPreset() {
   $('dual-device').classList.remove('has-frame');
   $('frame-info').textContent = 'No frame yet';
   graphSamples = [];
+  graphScale = 33.4;
   lastPerfStamp = -1;
   drawGraph();
   setupTarget = '';
@@ -209,6 +212,8 @@ async function refresh() {
       clearControls();
     }
     renderActivity(state.tasks, state.captures);
+    if (!perfChanging) $('perf-toggle').checked = state.perfEnabled === true;
+    $('perf-graph').hidden = !$('perf-toggle').checked;
     updateGraph(state.perf);
     $('controller-state').textContent = $('controls-enabled').checked ?
       (navigator.getGamepads?.() || []).some(Boolean) ? 'Controller ready' : 'Mouse controls ready' : 'Off';
@@ -376,6 +381,18 @@ async function loadCatalog() {
 }
 
 function updateGraph(perf) {
+  if (!$('perf-toggle').checked) {
+    graphSamples = [];
+    graphScale = 33.4;
+    lastPerfStamp = -1;
+    $('perf-detail').textContent = 'Performance capture off';
+    return;
+  }
+  if (perf && Number.isFinite(perf.timestampMs) && perf.timestampMs < lastPerfStamp) {
+    graphSamples = [];
+    graphScale = 33.4;
+    lastPerfStamp = -1;
+  }
   if (perf && Number.isFinite(perf.timestampMs) && perf.timestampMs > lastPerfStamp &&
       Number.isFinite(perf.frameMs) && Number.isFinite(perf.workMs)) {
     lastPerfStamp = perf.timestampMs;
@@ -396,12 +413,15 @@ function drawGraph() {
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.strokeStyle = colors.getPropertyValue('--line').trim();
   context.beginPath();
-  const guide = canvas.height - 16.7 / 33.3 * (canvas.height - 12) - 5;
+  const peak = Math.max(33.4, ...graphSamples.map(item => item.frame), ...graphSamples.map(item => item.work));
+  while (graphScale < peak) graphScale *= 2;
+  const max = graphScale;
+  $('perf-scale').textContent = `0–${max.toFixed(1)} ms`;
+  const guide = canvas.height - 16.7 / max * (canvas.height - 12) - 5;
   context.moveTo(0, guide);
   context.lineTo(canvas.width, guide);
   context.stroke();
   if (!graphSamples.length) return;
-  const max = Math.max(33.3, ...graphSamples.map(item => item.frame), ...graphSamples.map(item => item.work));
   for (const [key, color] of [['frame', colors.getPropertyValue('--accent2').trim()],
                               ['work', colors.getPropertyValue('--accent').trim()]]) {
     context.strokeStyle = color;
@@ -605,6 +625,17 @@ $('auto-device-host').addEventListener('click', async () => {
     setupMessage = 'Automatic private-network search resumed.';
   } catch (error) { setupMessage = error.message; }
   $('setup-result').textContent = setupMessage;
+});
+$('perf-toggle').addEventListener('change', async () => {
+  const preset = manifest.id;
+  const enabled = $('perf-toggle').checked;
+  perfChanging = true;
+  $('perf-toggle').disabled = true;
+  $('perf-graph').hidden = !enabled;
+  updateGraph(null);
+  try { await api('/api/performance', {preset, enabled}); }
+  catch (error) { feedback(error.message); }
+  finally { perfChanging = false; $('perf-toggle').disabled = false; await refresh(); }
 });
 $('live').addEventListener('change', () => { stopLive(); if ($('live').checked) liveTick(); });
 $('sound').addEventListener('change', async () => {

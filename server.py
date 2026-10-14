@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, urlsplit
 import webbrowser
 
 import capture_api
+import performance_capture
 from plugin_runtime import PluginRuntime
 from presets import LOCAL, PRESETS, ROOT, all_presets, public_presets, set_theme_override
 
@@ -300,6 +301,7 @@ def _state():
             "connected": status["connected"], "session": status["session"],
             "discovery": status["discovery"], "host": status["host"],
             "meta": status["meta"], "perf": status["perf"], "tasks": tasks,
+            "perfEnabled": performance_capture.enabled(LOCAL / preset),
             "captures": captures, "frameVersion": frame_version, "audioVersion": audio_version,
             "setupAvailable": bool(runtime and callable(getattr(runtime.adapter, "setup", None))),
             "manualHostAvailable": bool(runtime and callable(getattr(runtime.adapter, "set_host", None)))}
@@ -425,6 +427,12 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/theme":
                 colors = set_theme_override(_selected(), data.get("colors"))
                 return self._json({"colors": colors})
+            if path == "/api/performance":
+                preset = data.get("preset")
+                if preset not in {item["id"] for item in all_presets()}:
+                    raise ValueError("Unknown preset")
+                value = performance_capture.set_enabled(LOCAL / preset, data.get("enabled"))
+                return self._json({"enabled": value})
             if path == "/api/link":
                 if type(data.get("enabled")) is not bool:
                     raise ValueError("Invalid link switch")

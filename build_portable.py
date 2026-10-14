@@ -10,7 +10,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parent
 FILES = (
     ".gitignore", "LICENSE", "README.md", "run.cmd", "run.sh", "server.py",
-    "presets.py", "plugin_runtime.py", "capture_api.py", "reference_adapter.py",
+    "presets.py", "plugin_runtime.py", "performance_capture.py", "capture_api.py", "reference_adapter.py",
     "reference_transport.py", "viewer.html", "viewer.css", "device.css", "viewer.js",
     "build_portable.py", "tools/new_preset.py", "presets/example/manifest.json",
     "docs/INTEGRATION.md", "docs/PROTOCOL.md", "docs/SECURITY.md",

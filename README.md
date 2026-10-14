@@ -44,6 +44,8 @@ with `python tools/new_preset.py --help`; see the
 - **Enable mouse and controller input** lets a focused viewer send standard
   controller snapshots. Drag the virtual sticks; use preset buttons for short
   presses. The device should expire remote input if packets stop.
+- If the preset declares controller button bits, hold Ctrl and click multiple
+  buttons, then release Ctrl for one short simultaneous press.
 - A declared touch region maps clicks and drags to device coordinates.
 - Console commands, timing, reports, logs, catalogs, and safe menu previews
   appear only when the preset advertises them.
@@ -77,3 +79,7 @@ includes `local/` or other unlisted files.
 Remote Pilot's original source is licensed under [MIT](LICENSE), copyright
 2026 Kevin Boggs. Integrations must keep their own third-party notices and
 obtain permission for any media they distribute.
+
+### Performance capture
+
+The Performance capture checkbox is available in every preset and both device layouts. It defaults to off and remembers the choice per preset. Turning it off stops automatic timing requests and clears the graph; connection checks, Bug It, screenshots, and live preview remain available. A timing request already in flight may finish.
