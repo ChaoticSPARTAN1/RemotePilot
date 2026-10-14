@@ -1,6 +1,6 @@
 # Remote Pilot
 
-Remote Pilot is a local browser viewer for homebrew device testing. An optional
+Remote Pilot is a local browser viewer for homebrew device testing. Currently setup for 3d/duel screen family of devices but can be extended to other devices in the future. An optional
 device preset supplies the transport and declares the features its build
 supports. The checked-in **Example** preset is an offline preview. This source
 contains no game data, device media, pairing keys, saved captures, or personal
