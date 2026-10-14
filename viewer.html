@@ -37,16 +37,18 @@
   <div class="layout">
     <section class="panel display-panel" aria-labelledby="display-title">
       <div class="heading"><div><p class="eyebrow">DEVICE DISPLAY</p><h2 id="display-title">Live view</h2></div><span id="frame-info" class="muted">No frame yet</span></div>
+      <label id="model-picker" class="model-picker" for="device-model" hidden>Device view <select id="device-model"><option value="new">New 3DS · C stick and ZL/ZR</option><option value="original">Original 3DS</option><option value="generic">Generic frame</option></select></label>
       <div id="display" class="display" tabindex="0" aria-label="Device preview">
         <img id="frame" alt="Screen capture from the selected device" draggable="false" hidden>
         <span id="placeholder">Example preview · choose an integrated preset for device frames</span>
         <div id="dual-device" class="dual-device" hidden aria-label="Dual screen device preview">
-          <div class="device-top"><span class="device-camera" aria-hidden="true"></span><div class="top-screen device-screen"><img id="top-frame" alt="Upper device screen" draggable="false" hidden><span>Awaiting upper screen</span></div></div>
+          <div class="device-top"><span class="device-camera" aria-hidden="true"></span><span class="device-speaker left" aria-hidden="true"></span><div class="top-screen device-screen"><img id="top-frame" alt="Upper device screen" draggable="false" hidden><span>Awaiting upper screen</span></div><span class="device-speaker right" aria-hidden="true"></span></div>
           <div class="device-hinge" aria-hidden="true"></div>
           <div class="device-bottom">
             <div class="device-readout"><span><i id="device-link-light" aria-hidden="true"></i> LINK</span><strong id="device-label">Remote Pilot</strong><span>LOCAL</span></div>
-            <div class="device-controls"><div class="device-dpad" aria-label="Direction buttons"><button type="button" data-device-button="UP" aria-label="Up">▲</button><button type="button" data-device-button="LEFT" aria-label="Left">◀</button><button type="button" data-device-button="RIGHT" aria-label="Right">▶</button><button type="button" data-device-button="DOWN" aria-label="Down">▼</button></div><div id="lower-screen" class="bottom-screen device-screen"><img id="bottom-frame" alt="Lower device screen" draggable="false" hidden><span>Awaiting lower screen</span></div><div class="device-face" aria-label="Action buttons"><button type="button" data-device-button="X">X</button><button type="button" data-device-button="Y">Y</button><button type="button" data-device-button="A">A</button><button type="button" data-device-button="B">B</button></div></div>
-            <div class="device-analog"><div class="device-stick" data-stick="move" aria-label="Drag movement stick"><i></i></div><span>MOVE</span><span class="device-home">HOME</span><span>LOOK</span><div class="device-stick" data-stick="look" aria-label="Drag look stick"><i></i></div></div>
+            <div class="device-shoulders"><button type="button" data-device-button="ZL" class="device-shoulder zl">ZL</button><button type="button" data-device-button="L" class="device-shoulder l">L</button><button type="button" data-device-button="R" class="device-shoulder r">R</button><button type="button" data-device-button="ZR" class="device-shoulder zr">ZR</button></div>
+            <div class="device-controls"><div class="device-left"><div class="device-stick device-circle" data-stick="move" aria-label="Drag circle pad"><i></i></div><div class="device-dpad" aria-label="Direction buttons"><button type="button" data-device-button="UP" aria-label="Up">▲</button><button type="button" data-device-button="LEFT" aria-label="Left">◀</button><button type="button" data-device-button="RIGHT" aria-label="Right">▶</button><button type="button" data-device-button="DOWN" aria-label="Down">▼</button></div></div><div id="lower-screen" class="bottom-screen device-screen"><img id="bottom-frame" alt="Lower device screen" draggable="false" hidden><span>Awaiting lower screen</span></div><div class="device-right"><div class="device-stick device-c-stick" data-stick="look" aria-label="Drag C stick"><i></i></div><div class="device-face" aria-label="Action buttons"><button type="button" data-device-button="X">X</button><button type="button" data-device-button="Y">Y</button><button type="button" data-device-button="A">A</button><button type="button" data-device-button="B">B</button></div></div></div>
+            <div class="device-footer"><button type="button" data-device-button="SELECT">SELECT</button><span class="device-home">HOME</span><button type="button" data-device-button="START">START</button></div>
           </div>
         </div>
       </div>
@@ -56,9 +58,10 @@
         <label><input id="live" type="checkbox"> Live preview</label>
         <label><input id="sound" type="checkbox"> Sound</label>
         <label>Maximum rate <select id="rate"><option value="1000">1 fps</option><option value="500" selected>2 fps</option><option value="200">5 fps</option><option value="100">10 fps</option></select></label>
-        <label>With <select id="diagnostic"><option value="">Screen only</option><option value="log">Device log</option><option value="report">Report</option></select></label>
+        <label>Full capture includes <select id="diagnostic" aria-label="Full capture includes"><option value="">Screens only</option><option value="log">Screens + device log</option><option value="report">Screens + report</option></select></label>
       </div>
-      <div class="perf"><div class="heading"><h3>Performance</h3><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" width="640" height="140" aria-label="Recent frame times"></canvas></div>
+      <p class="micro capture-explain">This choice applies when you press Grab full capture. Device logs and reports appear only if the selected build supports them.</p>
+      <div class="perf"><div class="heading"><h3>Performance</h3><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" width="640" height="140" aria-label="Recent frame times"></canvas><p class="micro">Frame interval (light) · work time (accent) · 16.7 ms guide</p></div>
     </section>
 
     <div class="side">
@@ -75,7 +78,7 @@
         <form id="console-form"><label for="console">Device console command</label><div class="inline"><input id="console" maxlength="127" autocomplete="off" placeholder="Command supplied by the integrated build"><button type="submit">Send</button></div></form>
         <div class="action-row"><button id="report" class="secondary" type="button">Save report</button><button id="log" class="secondary" type="button">Read device log</button><button id="perf-request" class="secondary" type="button">Read timing</button></div>
       </section>
-      <section class="panel" aria-labelledby="colors-title"><div class="heading"><div><p class="eyebrow">APPEARANCE</p><h2 id="colors-title">Preset colors</h2></div></div><div class="colors"><label>Accent <input id="color-accent" type="color"></label><label>Background <input id="color-background" type="color"></label></div><div class="action-row"><button id="colors-save" class="secondary" type="button">Save colors</button><button id="colors-reset" class="quiet" type="button">Restore preset</button></div></section>
+      <section class="panel" aria-labelledby="colors-title"><div class="heading"><div><p class="eyebrow">APPEARANCE</p><h2 id="colors-title">Preset colors</h2></div></div><div class="colors"><label>Background <input id="color-background" type="color"></label><label>Surface <input id="color-surface" type="color"></label><label>Accent <input id="color-accent" type="color"></label><label>Text <input id="color-text" type="color"></label></div><div class="action-row"><button id="colors-save" class="secondary" type="button">Save colors</button><button id="colors-reset" class="quiet" type="button">Restore preset</button></div></section>
     </div>
   </div>
 

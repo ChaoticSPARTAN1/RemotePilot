@@ -25,8 +25,9 @@ ships no connected preset or device data.
    `--touch x,y,width,height,deviceWidth,deviceHeight` for a working touch
    region and `--audio-rate <sample-rate>` if live frames include PCM. Use
    `--layout dual-screen` when the image is two equal-height screens stacked
-   vertically, with a centered lower touch screen. The viewer then presents
-   a generic device shell like its interactive controller view. Use
+   vertically, with a centered lower touch screen. The viewer starts with
+   a New 3DS style shell; the user can select the original model or the raw
+   composite frame. This shell is CSS and ships no hardware artwork. Use
    `--buttons` to specify names your build accepts for bounded digital input.
    The script validates the manifest and creates `presets/<id>/manifest.json`
    plus a thin adapter. It generates **no token, device address, or port in

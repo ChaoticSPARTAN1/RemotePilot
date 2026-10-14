@@ -22,7 +22,7 @@ class PortableTests(unittest.TestCase):
                          ["presets/example/manifest.json"])
         self.assertIn("example", [item["id"] for item in presets.all_presets()])
         self.assertFalse((presets.PRESETS / "example" / "adapter.py").exists())
-        self.assertEqual(presets.all_presets()[0]["display"].get("layout", "screen"), "screen")
+        self.assertEqual(presets.all_presets()[0]["display"]["layout"], "dual-screen")
 
     def test_pairing_is_private_and_reusable(self):
         manifest = {"id": "sample", "capabilities": []}

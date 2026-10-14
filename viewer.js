@@ -18,6 +18,7 @@ let controlTimer = null;
 let lastControl = '';
 let pointerButtons = 0;
 let lastTouchPosition = null;
+let displayModel = 'new';
 const sticks = {move: {x: 0, y: 0}, look: {x: 0, y: 0}};
 
 async function api(path, data) {
@@ -46,24 +47,54 @@ function enabled(capability) {
 function setColors(theme) {
   const root = document.documentElement;
   for (const [key, value] of Object.entries(theme)) root.style.setProperty(`--${key}`, value);
-  $('color-accent').value = theme.accent;
-  $('color-background').value = theme.background;
+  for (const key of ['background', 'surface', 'accent', 'text']) $('color-' + key).value = theme[key];
+  drawGraph();
+}
+
+function modelAllowsButton(name) {
+  return displayModel !== 'original' || !['ZL', 'ZR'].includes(name);
+}
+
+function applyDisplayModel() {
+  const dual = manifest?.display.layout === 'dual-screen';
+  const shell = dual && displayModel !== 'generic';
+  $('model-picker').hidden = !dual;
+  $('device-model').value = displayModel;
+  $('display').classList.toggle('dual', shell);
+  $('dual-device').hidden = !shell;
+  $('dual-device').classList.toggle('original', displayModel === 'original');
+  document.body.classList.toggle('original-model', dual && displayModel === 'original');
+  $('display').setAttribute('aria-label', shell ?
+    `${displayModel === 'new' ? 'New' : 'Original'} 3DS preview` : 'Generic device frame');
+  $('frame').hidden = shell || !frameUrl;
+  $('placeholder').hidden = shell || Boolean(frameUrl);
+  for (const button of $('buttons').querySelectorAll('button')) {
+    button.hidden = !modelAllowsButton(button.dataset.button);
+    button.disabled = !enabled('input') || !modelAllowsButton(button.dataset.button);
+  }
+  for (const button of document.querySelectorAll('[data-device-button]'))
+    button.disabled = !enabled('input') || !$('controls-enabled').checked ||
+      !manifest.buttons?.includes(button.dataset.deviceButton) || !modelAllowsButton(button.dataset.deviceButton);
+  if (displayModel === 'original') {
+    sticks.look = {x: 0, y: 0};
+    updateStickVisual('look');
+  }
 }
 
 function renderPreset() {
   if (!manifest) return;
   const display = manifest.display;
-  const dual = display.layout === 'dual-screen';
   $('display').style.aspectRatio = `${display.width} / ${display.height}`;
-  $('display').classList.toggle('dual', dual);
-  $('dual-device').hidden = !dual;
+  try { displayModel = localStorage.getItem(`remote-pilot-model-${manifest.id}`) || 'new'; } catch (_) { displayModel = 'new'; }
+  if (!['new', 'original', 'generic'].includes(displayModel)) displayModel = 'new';
   $('device-label').textContent = manifest.name;
   $('display').classList.toggle('touch-ready', Boolean(display.touch));
   $('display-title').textContent = `${manifest.name} display`;
   $('placeholder').textContent = manifest.id === 'example' ?
     'Example preview · choose an integrated preset for device frames' : 'Waiting for a device frame';
-  $('display-help').textContent = display.touch ?
-    'Click or drag within the touch region to send bounded device coordinates.' :
+  $('display-help').textContent = manifest.id === 'example' ?
+    'Tap or drag the lower screen to preview touch coordinates. Example sends nothing to a device.' :
+    display.touch ? 'Click or drag within the touch region to send bounded device coordinates.' :
     'This preset has no touch region.';
   $('live').checked = false;
   $('sound').checked = false;
@@ -76,7 +107,6 @@ function renderPreset() {
   $('top-frame').hidden = true;
   $('bottom-frame').hidden = true;
   $('dual-device').classList.remove('has-frame');
-  $('placeholder').hidden = dual;
   $('frame-info').textContent = 'No frame yet';
   graphSamples = [];
   lastPerfStamp = -1;
@@ -104,6 +134,7 @@ function renderPreset() {
   $('control-help').textContent = manifest.buttons?.length ?
     'Each button sends one short press. Controller snapshots are opt in.' :
     'The integrated build has not declared manual buttons.';
+  applyDisplayModel();
   loadCatalog();
 }
 
@@ -147,9 +178,11 @@ async function refresh() {
     $('retry').disabled = !state.linkEnabled || manifest.id === 'example';
     $('diagnostic').querySelector('[value="log"]').disabled = !manifest.capabilities.includes('log');
     $('diagnostic').querySelector('[value="report"]').disabled = !manifest.capabilities.includes('report');
-    for (const button of $('buttons').querySelectorAll('button')) button.disabled = !enabled('input');
+    for (const button of $('buttons').querySelectorAll('button'))
+      button.disabled = !enabled('input') || !modelAllowsButton(button.dataset.button);
     for (const button of document.querySelectorAll('[data-device-button]'))
-      button.disabled = !enabled('input') || !$('controls-enabled').checked || !manifest.buttons?.includes(button.dataset.deviceButton);
+      button.disabled = !enabled('input') || !$('controls-enabled').checked ||
+        !manifest.buttons?.includes(button.dataset.deviceButton) || !modelAllowsButton(button.dataset.deviceButton);
     $('display').classList.toggle('controls-on', connected && $('controls-enabled').checked);
     for (const button of $('catalog').querySelectorAll('button')) button.disabled = !enabled('preview');
     if (!connected) {
@@ -176,7 +209,7 @@ async function loadFrame() {
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
   $('frame').src = url;
-  const dual = manifest.display.layout === 'dual-screen';
+  const dual = $('display').classList.contains('dual');
   $('frame').hidden = dual;
   if (dual) {
     $('top-frame').src = url;
@@ -332,15 +365,19 @@ function updateGraph(perf) {
 function drawGraph() {
   const canvas = $('perf-graph');
   const context = canvas.getContext('2d');
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = '#3d7761';
+  const colors = getComputedStyle(document.documentElement);
+  context.fillStyle = colors.getPropertyValue('--surface2').trim();
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = colors.getPropertyValue('--line').trim();
   context.beginPath();
-  context.moveTo(0, 103);
-  context.lineTo(canvas.width, 103);
+  const guide = canvas.height - 16.7 / 33.3 * (canvas.height - 12) - 5;
+  context.moveTo(0, guide);
+  context.lineTo(canvas.width, guide);
   context.stroke();
   if (!graphSamples.length) return;
   const max = Math.max(33.3, ...graphSamples.map(item => item.frame), ...graphSamples.map(item => item.work));
-  for (const [key, color] of [['frame', '#b2ffd5'], ['work', '#55e59a']]) {
+  for (const [key, color] of [['frame', colors.getPropertyValue('--accent2').trim()],
+                              ['work', colors.getPropertyValue('--accent').trim()]]) {
     context.strokeStyle = color;
     context.lineWidth = 2;
     context.beginPath();
@@ -410,7 +447,7 @@ function stickPointer(element, key) {
     updateStickVisual(key);
   }
   element.addEventListener('pointerdown', event => {
-    if (!$('controls-enabled').checked) return;
+    if (!$('controls-enabled').checked || key === 'look' && displayModel === 'original') return;
     element.setPointerCapture(event.pointerId);
     sample(event);
   });
@@ -425,12 +462,14 @@ function gamepadPayload(forceZero = false) {
   const axes = gamepad?.axes || [];
   let buttons = forceZero ? 0 : pointerButtons;
   if (gamepad) gamepad.buttons.slice(0, 16).forEach((button, index) => { if (button.pressed) buttons |= 1 << index; });
+  if (displayModel === 'original') buttons &= ~((1 << 6) | (1 << 7));
   const axis = (index, fallback) => forceZero ? 0 : Math.abs(fallback) > .03 ? fallback :
     Math.abs(axes[index] || 0) > .08 ? axes[index] : 0;
   return {buttons, lx: axis(0, sticks.move.x), ly: axis(1, sticks.move.y),
-          rx: axis(2, sticks.look.x), ry: axis(3, sticks.look.y),
-          lt: forceZero ? 0 : gamepad?.buttons[6]?.value || 0,
-          rt: forceZero ? 0 : gamepad?.buttons[7]?.value || 0, frames: 8};
+          rx: displayModel === 'original' ? 0 : axis(2, sticks.look.x),
+          ry: displayModel === 'original' ? 0 : axis(3, sticks.look.y),
+          lt: forceZero || displayModel === 'original' ? 0 : gamepad?.buttons[6]?.value || 0,
+          rt: forceZero || displayModel === 'original' ? 0 : gamepad?.buttons[7]?.value || 0, frames: 8};
 }
 
 async function sendGamepad(forceZero = false) {
@@ -446,7 +485,7 @@ async function sendGamepad(forceZero = false) {
 function touchPosition(event) {
   const touch = manifest?.display?.touch;
   if (!touch) return null;
-  if (manifest.display.layout === 'dual-screen') {
+  if ($('display').classList.contains('dual')) {
     const lower = $('lower-screen').getBoundingClientRect();
     const x = (event.clientX - lower.left) / lower.width;
     const y = (event.clientY - lower.top) / lower.height;
@@ -468,6 +507,15 @@ function touchPosition(event) {
 }
 
 async function sendTouch(event, down) {
+  if (manifest?.id === 'example') {
+    const position = touchPosition(event) || (!down ? lastTouchPosition : null);
+    if (!position) return;
+    lastTouchPosition = down ? position : null;
+    $('display-help').textContent = down ?
+      `Touch preview: ${position.x}, ${position.y}. Example sends nothing to a device.` :
+      'Touch preview released. Example sends nothing to a device.';
+    return;
+  }
   if (!enabled('touch') || !$('controls-enabled').checked) return;
   const position = touchPosition(event) || (!down ? lastTouchPosition : null);
   if (!position) return;
@@ -494,6 +542,12 @@ async function init() {
 }
 
 $('preset').addEventListener('change', event => choosePreset(event.target.value).catch(error => feedback(error.message)));
+$('device-model').addEventListener('change', event => {
+  clearControls();
+  displayModel = event.target.value;
+  try { localStorage.setItem(`remote-pilot-model-${manifest.id}`, displayModel); } catch (_) {}
+  applyDisplayModel();
+});
 $('setup-hide').addEventListener('click', () => { $('setup').hidden = true; $('setup-open').hidden = false; });
 $('setup-open').addEventListener('click', () => { $('setup').hidden = false; $('setup-open').hidden = true; });
 $('prepare').addEventListener('click', prepareSetup);
@@ -540,7 +594,7 @@ $('retry').addEventListener('click', async () => { try { await api('/api/retry',
 $('console-form').addEventListener('submit', event => { event.preventDefault(); action('console', $('console').value.trim()); });
 for (const [id, kind] of [['report','report'], ['log','log'], ['perf-request','perf']]) $(''+id).addEventListener('click', () => action(kind));
 $('colors-save').addEventListener('click', async () => {
-  try { await api('/api/theme', {colors: {accent: $('color-accent').value, background: $('color-background').value}}); const presets = await api('/api/presets'); manifest = presets.presets.find(item => item.id === state.preset); setColors(manifest.theme); feedback('Preset colors saved on this computer.'); }
+  try { await api('/api/theme', {colors: Object.fromEntries(['background', 'surface', 'accent', 'text'].map(key => [key, $('color-' + key).value]))}); const presets = await api('/api/presets'); manifest = presets.presets.find(item => item.id === state.preset); setColors(manifest.theme); feedback('Preset colors saved on this computer.'); }
   catch (error) { feedback(error.message); }
 });
 $('colors-reset').addEventListener('click', async () => {
@@ -550,7 +604,8 @@ $('colors-reset').addEventListener('click', async () => {
 for (const element of document.querySelectorAll('[data-stick]')) stickPointer(element, element.dataset.stick);
 for (const element of document.querySelectorAll('[data-device-button]')) element.addEventListener('click', () => {
   const button = element.dataset.deviceButton;
-  if ($('controls-enabled').checked && enabled('input') && manifest.buttons?.includes(button))
+  if ($('controls-enabled').checked && enabled('input') &&
+      manifest.buttons?.includes(button) && modelAllowsButton(button))
     action('input', {button, frames: 1});
 });
 let lastTouch = 0;
@@ -561,7 +616,8 @@ $('display').addEventListener('pointercancel', event => sendTouch(event, false))
 $('controls-enabled').addEventListener('change', () => {
   if (!$('controls-enabled').checked) clearControls();
   for (const button of document.querySelectorAll('[data-device-button]'))
-    button.disabled = !$('controls-enabled').checked || !enabled('input') || !manifest.buttons?.includes(button.dataset.deviceButton);
+    button.disabled = !$('controls-enabled').checked || !enabled('input') ||
+      !manifest.buttons?.includes(button.dataset.deviceButton) || !modelAllowsButton(button.dataset.deviceButton);
   $('display').classList.toggle('controls-on', $('controls-enabled').checked && state?.connected);
 });
 window.addEventListener('blur', clearControls);

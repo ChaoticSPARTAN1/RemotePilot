@@ -48,3 +48,43 @@
 .device-stick:active{cursor:grabbing}
 @media(max-width:720px){.connect-bar{flex-direction:column;align-items:stretch}.connect-actions{justify-content:stretch}.connect-actions button{flex:1}.device-analog{margin-left:5%;margin-right:5%}}
 @media(max-width:470px){.device-top{padding-left:8%;padding-right:8%}.device-bottom{padding-left:3%;padding-right:3%}.device-controls{gap:2%}.device-analog{font-size:.49rem}.device-stick{width:32px;height:32px}.device-stick i{width:16px;height:16px}}
+
+/* The selected model changes the shell and the inputs available in the viewer. */
+.model-picker{display:flex;align-items:center;gap:10px;margin:-5px 0 15px;color:var(--muted);font-size:.82rem}
+.model-picker select{min-width:240px}
+.display.dual{cursor:default}
+.display.dual .device-top{padding:30px 10% 21px}
+.display.dual .device-bottom{padding:16px 3.5% 14px}
+.device-speaker{position:absolute!important;top:42%;width:10px;height:41px;border-left:2px dotted var(--line);border-right:2px dotted var(--line);opacity:.7}
+.device-speaker.left{left:4%}.device-speaker.right{right:4%}
+.device-shoulder{position:absolute!important;top:-8px;color:var(--muted);font-size:.53rem;font-weight:800;letter-spacing:.08em}
+.device-shoulder.left{left:10%}.device-shoulder.right{right:10%}
+.device-shoulder.zl{left:8%}.device-shoulder.l{left:23%}.device-shoulder.r{right:23%}.device-shoulder.zr{right:8%}
+.device-shoulders button,.device-footer button{min-width:0;padding:2px 5px;background:var(--surface2);border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:.53rem;line-height:1.2}
+.device-shoulders button:hover:not(:disabled),.device-footer button:hover:not(:disabled){color:var(--accent2);border-color:var(--accent)}
+.device-controls{display:grid;grid-template-columns:minmax(60px,.82fr) minmax(0,3.6fr) minmax(60px,.82fr);gap:2.6%;align-items:stretch}
+.device-left,.device-right{display:flex;flex-direction:column;justify-content:space-around;align-items:center;min-width:0}
+.device-left .device-circle{width:61px;height:61px;background:radial-gradient(circle at 35% 30%,var(--surface),var(--background));border-width:4px;box-shadow:inset 0 4px 8px #000a,0 1px 2px #ffffff22}
+.device-circle i{width:33px;height:33px;border-width:3px;background:var(--surface);box-shadow:inset 0 2px 3px #ffffff33,0 3px 7px #0008}
+.device-right .device-c-stick{width:28px;height:28px;border-width:2px;background:var(--surface)}
+.device-c-stick i{width:16px;height:16px;background:var(--line);border-color:var(--muted);box-shadow:inset 0 2px 3px #0008}
+.device-dpad{width:70px;height:70px}
+.device-dpad button{font-size:.65rem;background:linear-gradient(145deg,var(--surface),var(--background));border-radius:2px}
+.device-face{width:79px;max-width:79px}
+.device-face button{font-size:.7rem;background:linear-gradient(145deg,var(--surface),var(--background))}
+.device-footer{display:flex;justify-content:center;align-items:center;gap:16%;margin-top:14px;color:var(--muted);font-size:.55rem;font-weight:800;letter-spacing:.1em}
+.display.dual .dual-device .device-footer span{position:static;color:var(--muted)}
+.device-footer .device-home{color:var(--accent2)!important}
+.dual-device.original .device-c-stick,.dual-device.original .device-shoulder.zl,.dual-device.original .device-shoulder.zr{visibility:hidden}
+.original-model .side [data-stick="look"]{opacity:.35;pointer-events:none}
+.display:not(.dual){background:linear-gradient(145deg,var(--surface2),var(--background))}
+body{background:radial-gradient(circle at 15% -12%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 34%),var(--background)}
+.mark{box-shadow:0 0 24px color-mix(in srgb,var(--glow) 35%,transparent)}
+.stick i{box-shadow:0 0 12px color-mix(in srgb,var(--glow) 35%,transparent)}
+.perf canvas{background:var(--surface2)}
+.colors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.colors label{justify-content:space-between}
+.colors input{cursor:pointer}
+#diagnostic{max-width:none;min-width:190px}
+.capture-explain{margin:8px 0 0}
+@media(max-width:470px){.model-picker{align-items:flex-start;flex-direction:column}.model-picker select{width:100%;min-width:0}.device-controls{grid-template-columns:minmax(45px,.82fr) minmax(0,3.6fr) minmax(45px,.82fr);gap:1.5%}.device-left .device-circle{width:42px;height:42px}.device-circle i{width:23px;height:23px}.device-dpad{width:46px;height:46px}.device-face{width:48px}.device-right .device-c-stick{width:22px;height:22px}.device-c-stick i{width:12px;height:12px}}
