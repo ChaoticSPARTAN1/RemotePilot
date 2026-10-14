@@ -1,0 +1,65 @@
+# Remote Pilot
+
+Remote Pilot is a local browser viewer for homebrew device testing. An optional
+device preset supplies the transport and declares the features its build
+supports. The checked-in **Example** preset is an offline preview. This source
+contains no game data, device media, pairing keys, saved captures, or personal
+network configuration.
+
+## Start
+
+Install Python 3.11 or newer. On Windows, open `run.cmd`; on macOS or Linux, run
+`sh run.sh`. The launcher opens the viewer at a free loopback address. No fixed
+viewer port, cloud account, or inbound PC firewall rule is required. To avoid
+opening a browser automatically, run `python server.py --no-browser` and open
+the printed local URL yourself.
+
+The first-run guide appears in the viewer. Example needs no device and makes no
+network connection. Once a trusted device preset is installed, select it and:
+
+1. Choose **Prepare pairing**. The adapter generates a random token and a
+   private config for the device. The token is reused when setup is repeated.
+2. Choose **Copy to selected device folder** and select the storage root. The
+   viewer creates the documented relative path. If your browser does not offer
+   directory access, choose **Download device config** and copy it to that path.
+3. Start the matching homebrew build and enable its PC link. The reference
+   adapter searches the current private local network and connects once the
+   device proves it knows the token. **Retry connection** starts a fresh scan.
+
+The integrated build must implement the [RP2 protocol](docs/PROTOCOL.md), or
+provide its own trusted Python adapter. A browser cannot add support to a
+device build that has no integration. Developers can create a starter preset
+with `python tools/new_preset.py --help`; see the
+[integration guide](docs/INTEGRATION.md) and [example implementation prompt](docs/EXAMPLE_PROMPT.md).
+
+## Use
+
+- **Grab full capture** saves a device image and, if selected and supported, a
+  log or report under ignored `local/captures/`.
+- **Live preview** requests bounded frames at the chosen maximum rate. **Sound**
+  is opt in and plays mono PCM supplied with those frames.
+- **Enable mouse and controller input** lets a focused viewer send standard
+  controller snapshots. Drag the virtual sticks; use preset buttons for short
+  presses. The device should expire remote input if packets stop.
+- A declared touch region maps clicks and drags to device coordinates.
+- Console commands, timing, reports, logs, catalogs, and safe menu previews
+  appear only when the preset advertises them.
+- **Pause PC link** stops host actions. The device's own session switch must
+  also allow remote access.
+
+The viewer listens only on this computer. Preset adapters are executable Python
+loaded from `presets/<id>/adapter.py`; install only adapters you trust. The
+checked-in bundle includes no live adapter. `local/` is ignored by Git and
+keeps pairing files, captures, themes, request history, and cached addresses on
+this computer. See [security notes](docs/SECURITY.md).
+
+## Portable bundle and license
+
+Run `python build_portable.py` to create `dist/RemotePilot-portable.zip`. Its
+explicit file list includes only the Example preset and source needed to run
+and integrate the viewer. The archive includes a checksum manifest; it never
+includes `local/` or other unlisted files.
+
+Remote Pilot's original source is licensed under [MIT](LICENSE), copyright
+2026 Kevin Boggs. Integrations must keep their own third-party notices and
+obtain permission for any media they distribute.

@@ -1,0 +1,21 @@
+{
+  "id": "example",
+  "name": "Example",
+  "order": 0,
+  "mark": "R",
+  "transport": "example-offline",
+  "capabilities": [],
+  "display": {"width": 640, "height": 360},
+  "buttons": ["UP", "DOWN", "LEFT", "RIGHT", "PRIMARY", "SECONDARY", "MENU"],
+  "theme": {
+    "background": "#091612",
+    "surface": "#10251d",
+    "surface2": "#0d1e18",
+    "line": "#3d7761",
+    "text": "#e5fff0",
+    "muted": "#a8cdb9",
+    "accent": "#55e59a",
+    "accent2": "#b2ffd5",
+    "glow": "#34bf7d"
+  }
+}

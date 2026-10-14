@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Remote Pilot</title>
+  <link rel="stylesheet" href="/viewer.css">
+  <script src="/viewer.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <div class="brand"><span class="mark" aria-hidden="true">R</span><div><p class="eyebrow">LOCAL DEVICE QA</p><h1>Remote Pilot</h1></div></div>
+    <label class="preset-picker">Preset <select id="preset" aria-label="Device preset"></select></label>
+    <button id="setup-open" class="quiet" type="button" hidden>Setup guide</button><span id="status" class="status" role="status">Starting viewer</span>
+  </header>
+
+  <section id="setup" class="panel setup" aria-labelledby="setup-title">
+    <div class="heading"><div><p class="eyebrow">FIRST RUN</p><h2 id="setup-title">Connect a homebrew build</h2></div><button id="setup-hide" class="quiet" type="button">Hide guide</button></div>
+    <ol>
+      <li><strong>Add a trusted preset.</strong> The Example preset works offline. An integrated homebrew build adds its own preset and adapter.</li>
+      <li><strong>Select that preset and prepare pairing.</strong> Remote Pilot generates the private device config when the adapter supports one-step setup.</li>
+      <li><strong>Copy the config to your device.</strong> The destination is specified by that build. Start the build and allow its local PC link.</li>
+    </ol>
+    <div class="setup-actions"><button id="prepare" type="button">Prepare pairing</button><button id="install-config" type="button" hidden>Copy to selected device folder</button><button id="download-config" type="button" hidden>Download device config</button><a href="/docs/INTEGRATION.md" id="integration-guide">Integration guide</a></div>
+    <p id="setup-result" class="muted" role="status">Select a device preset to begin. Example needs no pairing.</p>
+  </section>
+
+  <div class="layout">
+    <section class="panel display-panel" aria-labelledby="display-title">
+      <div class="heading"><div><p class="eyebrow">DEVICE DISPLAY</p><h2 id="display-title">Live view</h2></div><span id="frame-info" class="muted">No frame yet</span></div>
+      <div id="display" class="display" tabindex="0" aria-label="Device preview">
+        <img id="frame" alt="Screen capture from the selected device" draggable="false" hidden>
+        <span id="placeholder">Example preview · choose an integrated preset for device frames</span>
+      </div>
+      <p id="display-help" class="micro">Device touch input is available when the selected preset declares a touch region.</p>
+      <div class="toolbar">
+        <button id="capture" type="button">Grab full capture</button>
+        <label><input id="live" type="checkbox"> Live preview</label>
+        <label><input id="sound" type="checkbox"> Sound</label>
+        <label>Maximum rate <select id="rate"><option value="1000">1 fps</option><option value="500" selected>2 fps</option><option value="200">5 fps</option><option value="100">10 fps</option></select></label>
+        <label>With <select id="diagnostic"><option value="">Screen only</option><option value="log">Device log</option><option value="report">Report</option></select></label>
+      </div>
+      <div class="link-actions"><button id="link" class="secondary" type="button">Pause PC link</button><button id="retry" class="secondary" type="button">Retry connection</button><span id="connection-detail" class="muted">Example runs locally.</span></div>
+      <div class="perf"><div class="heading"><h3>Performance</h3><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" width="640" height="140" aria-label="Recent frame times"></canvas></div>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="control-title">
+        <div class="heading"><div><p class="eyebrow">REMOTE INPUT</p><h2 id="control-title">Controls</h2></div><span id="controller-state" class="muted">Off</span></div>
+        <label class="enable"><input id="controls-enabled" type="checkbox"> Enable mouse and controller input</label>
+        <p class="micro">Input runs only while this tab is visible and focused. Physical device input takes priority when the integration supports it.</p>
+        <div class="sticks"><div class="stick-wrap"><div class="stick" data-stick="move" aria-label="Drag movement stick"><i></i></div><span>MOVE</span></div><div class="stick-wrap"><div class="stick" data-stick="look" aria-label="Drag look stick"><i></i></div><span>LOOK</span></div></div>
+        <div id="buttons" class="buttons" aria-label="Bounded button presses"></div>
+        <p id="control-help" class="micro">Buttons appear from the selected preset.</p>
+      </section>
+      <section class="panel" aria-labelledby="console-title">
+        <div class="heading"><div><p class="eyebrow">MANUAL QA</p><h2 id="console-title">Console and actions</h2></div></div>
+        <form id="console-form"><label for="console">Device console command</label><div class="inline"><input id="console" maxlength="127" autocomplete="off" placeholder="Command supplied by the integrated build"><button type="submit">Send</button></div></form>
+        <div class="action-row"><button id="report" class="secondary" type="button">Save report</button><button id="log" class="secondary" type="button">Read device log</button><button id="perf-request" class="secondary" type="button">Read timing</button></div>
+      </section>
+      <section class="panel" aria-labelledby="colors-title"><div class="heading"><div><p class="eyebrow">APPEARANCE</p><h2 id="colors-title">Preset colors</h2></div></div><div class="colors"><label>Accent <input id="color-accent" type="color"></label><label>Background <input id="color-background" type="color"></label></div><div class="action-row"><button id="colors-save" class="secondary" type="button">Save colors</button><button id="colors-reset" class="quiet" type="button">Restore preset</button></div></section>
+    </div>
+  </div>
+
+  <section id="catalog-panel" class="panel" hidden aria-labelledby="catalog-title"><div class="heading"><div><p class="eyebrow">DEVICE CATALOG</p><h2 id="catalog-title">Installed content</h2></div></div><p class="micro">Catalog entries describe content; previews require the device to be in a safe menu state.</p><div id="catalog"></div></section>
+  <section class="panel" aria-labelledby="activity-title"><div class="heading"><div><p class="eyebrow">SESSION</p><h2 id="activity-title">Requests and captures</h2></div></div><p id="feedback" role="status" class="feedback"></p><div id="activity" class="activity"></div></section>
+  <footer><span>Remote Pilot runs on this computer. Pairing files and captures stay in its private local folder.</span></footer>
+</main>
+</body>
+</html>

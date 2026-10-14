@@ -1,0 +1,11 @@
+local/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+*.log
+*.tmp
+presets/*/
+!presets/example/
