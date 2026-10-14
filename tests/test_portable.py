@@ -7,6 +7,7 @@ import struct
 import tempfile
 import threading
 import unittest
+from unittest.mock import patch
 
 import presets
 from build_portable import FILES
@@ -143,6 +144,35 @@ class PortableTests(unittest.TestCase):
         self.assertEqual(server._body_image(bytes(body))[2:], (2, 4))
         with self.assertRaises(ValueError):
             server._body_image(bytes(body[:-1]))
+
+    def test_capture_and_stream_replace_the_current_frame(self):
+        first = bytearray(54 + 4 * 8)
+        first[:2] = b"BM"
+        struct.pack_into("<I", first, 2, len(first))
+        struct.pack_into("<I", first, 10, 54)
+        struct.pack_into("<ii", first, 18, 2, 4)
+        struct.pack_into("<H", first, 28, 24)
+        second = bytearray(first)
+        second[-1] = 1
+
+        class SyntheticDevice:
+            def request(self, kind, payload):
+                return bytes(first if kind == "shot" else second)
+
+        manifest = {"id": "synthetic", "display": {"width": 2, "height": 4},
+                    "capabilities": ["screenshot", "stream"]}
+        server.RUNTIMES["synthetic"] = SyntheticDevice()
+        try:
+            with patch.object(server, "all_presets", return_value=[manifest]):
+                server._work("synthetic", "shot", "-")
+                self.assertEqual(server.FRAMES["synthetic"][0], 1)
+                self.assertEqual(server.FRAMES["synthetic"][2], bytes(first))
+                server._work("synthetic", "stream", "-")
+                self.assertEqual(server.FRAMES["synthetic"][0], 2)
+                self.assertEqual(server.FRAMES["synthetic"][2], bytes(second))
+        finally:
+            server.RUNTIMES.pop("synthetic", None)
+            server.FRAMES.pop("synthetic", None)
 
 
 if __name__ == "__main__":

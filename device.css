@@ -87,4 +87,10 @@ body{background:radial-gradient(circle at 15% -12%,color-mix(in srgb,var(--accen
 .colors input{cursor:pointer}
 #diagnostic{max-width:none;min-width:190px}
 .capture-explain{margin:8px 0 0}
+.device-screen{background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 58%),repeating-linear-gradient(0deg,transparent 0 19px,color-mix(in srgb,var(--line) 11%,transparent) 20px),var(--background)}
+.display.dual .device-screen span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--accent2);font-size:.77rem;font-weight:650;letter-spacing:.03em}
+.display.dual .device-screen span::before{content:"";display:block;width:34px;height:34px;border:2px solid var(--accent);border-radius:50%;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 10%,transparent),inset 0 0 15px color-mix(in srgb,var(--accent) 24%,transparent)}
+.display:not(.dual){background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 57%),repeating-linear-gradient(0deg,transparent 0 19px,color-mix(in srgb,var(--line) 12%,transparent) 20px),var(--background)}
+.display:not(.dual) #placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--accent2);font-size:.9rem;line-height:1.5}
+.display:not(.dual) #placeholder::before{content:"";display:block;width:78px;height:48px;border:2px solid var(--accent);border-radius:6px;box-shadow:0 64px 0 -5px var(--background),0 64px 0 -3px var(--line),0 0 22px color-mix(in srgb,var(--glow) 28%,transparent);margin-bottom:72px}
 @media(max-width:470px){.model-picker{align-items:flex-start;flex-direction:column}.model-picker select{width:100%;min-width:0}.device-controls{grid-template-columns:minmax(45px,.82fr) minmax(0,3.6fr) minmax(45px,.82fr);gap:1.5%}.device-left .device-circle{width:42px;height:42px}.device-circle i{width:23px;height:23px}.device-dpad{width:46px;height:46px}.device-face{width:48px}.device-right .device-c-stick{width:22px;height:22px}.device-c-stick i{width:12px;height:12px}}

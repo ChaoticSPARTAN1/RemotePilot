@@ -55,6 +55,22 @@ function modelAllowsButton(name) {
   return displayModel !== 'original' || !['ZL', 'ZR'].includes(name);
 }
 
+function renderIdle() {
+  if (!manifest) return;
+  const example = manifest.id === 'example';
+  const connected = state?.preset === manifest.id && state.connected && state.linkEnabled;
+  $('top-idle').textContent = example ? 'Offline preview' :
+    connected ? 'Connected · awaiting frame' : 'Awaiting paired device';
+  $('bottom-idle').textContent = example ? 'Tap for touch demo' :
+    connected ? 'Capture or start Live preview' : 'Open PC Link on the device';
+  $('placeholder').textContent = example ?
+    'Offline example · select an integrated preset for device frames' :
+    connected ? 'Connected · grab a capture or start Live preview' :
+    'Awaiting paired device frame';
+  if (!frameUrl) $('frame-info').textContent = example ? 'Offline example' :
+    connected ? 'Ready for capture' : 'No frame yet';
+}
+
 function applyDisplayModel() {
   const dual = manifest?.display.layout === 'dual-screen';
   const shell = dual && displayModel !== 'generic';
@@ -90,8 +106,6 @@ function renderPreset() {
   $('device-label').textContent = manifest.name;
   $('display').classList.toggle('touch-ready', Boolean(display.touch));
   $('display-title').textContent = `${manifest.name} display`;
-  $('placeholder').textContent = manifest.id === 'example' ?
-    'Example preview · choose an integrated preset for device frames' : 'Waiting for a device frame';
   $('display-help').textContent = manifest.id === 'example' ?
     'Tap or drag the lower screen to preview touch coordinates. Example sends nothing to a device.' :
     display.touch ? 'Click or drag within the touch region to send bounded device coordinates.' :
@@ -135,6 +149,7 @@ function renderPreset() {
     'Each button sends one short press. Controller snapshots are opt in.' :
     'The integrated build has not declared manual buttons.';
   applyDisplayModel();
+  renderIdle();
   loadCatalog();
 }
 
@@ -161,6 +176,7 @@ async function refresh() {
     status.classList.toggle('connected', connected);
     status.classList.toggle('warning', manifest.id !== 'example' && !connected);
     $('device-link-light').classList.toggle('connected', connected);
+    renderIdle();
     $('connection-detail').textContent = state.discovery || 'Waiting for adapter status';
     $('link').textContent = state.linkEnabled ? 'Pause PC link' : 'Resume PC link';
     $('prepare').disabled = !state.setupAvailable;

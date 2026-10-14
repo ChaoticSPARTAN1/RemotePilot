@@ -57,6 +57,10 @@ with `python tools/new_preset.py --help`; see the
 - **Preset colors** lets you save separate background, surface, accent, and
   text colors for each preset. The performance graph follows that theme.
 
+The console and raw frame views use a themed waiting screen until the selected
+build supplies a capture or live frame. They contain no bundled game image;
+new frames replace the waiting screen in the local viewer as they arrive.
+
 The viewer listens only on this computer. Preset adapters are executable Python
 loaded from `presets/<id>/adapter.py`; install only adapters you trust. The
 checked-in bundle includes no live adapter. `local/` is ignored by Git and

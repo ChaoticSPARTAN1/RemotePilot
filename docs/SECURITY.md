@@ -24,7 +24,10 @@ Preset adapters are executable Python. Install only code you trust and inspect
 its dependencies; an adapter has the same file and network access as the user
 running Remote Pilot. A preset's device config destination is validated as a
 relative path before the browser writes to a selected storage folder. The
-viewer never silently chooses a drive or installs device software.
+viewer never silently chooses a drive or installs device software. The source
+viewer draws its empty screens in CSS. Device screenshots are received at
+runtime and stored only under ignored `local/`; no sample gameplay capture is
+part of the repository or portable bundle.
 
 Before sharing a fork or integration, run the tests and the repository audit in
 `docs/INTEGRATION.md`; inspect the exact staged files and the full Git history.
