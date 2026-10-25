@@ -58,3 +58,11 @@ release; its MIT notice accompanies the source and binaries. No commercial game
 CIA, Doom asset, save, owner path, network address or pairing secret is included.
 Owner assets are registered and used locally, independently of repository content.
 This content/provenance check does not certify downstream third-party packages.
+
+
+## Diagnostics addition - 2026-10-25
+
+Original PC code follows the existing MIT license; companion code follows GPL-3.0.
+Existing notices and original artwork are preserved. Matching source accompanies
+both native apps. No game assets, owner logs, crash dumps, screenshots, saves,
+credentials or personal network configuration are included.

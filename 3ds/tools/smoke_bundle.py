@@ -57,7 +57,7 @@ def main():
             presets=json.loads(get(base+'/api/presets'))['presets']
             assert sorted(p['id'] for p in presets)==receipt['presets']
             assert b'Remote Pilot' in get(base+'/')
-            for name in ('viewer.js','viewer.css','themes.css','homebrew.js','homebrew_flow.js','data_transfer_ui.js'):
+            for name in ('viewer.js','viewer.css','themes.css','homebrew.js','homebrew_flow.js','data_transfer_ui.js','diagnostics_ui.js'):
                 assert get(base+'/'+name)
             # Select each adapter offline. No pairing configuration is supplied,
             # so no device scan, input, transfer or install is initiated.
@@ -72,8 +72,8 @@ def main():
             # Exercise sibling apps discovery directly, without any console key.
             check=('from homebrew_runtime import HomebrewAdapter;import tempfile;'
                    'p=tempfile.TemporaryDirectory();a=HomebrewAdapter(p.name,{});'
-                   'u=a.available_updates();assert u["companion"]["version"]==10;'
-                   'assert u["updater"]["version"]==9;a.stop();p.cleanup()')
+                   'u=a.available_updates();assert u["companion"]["version"]==11;'
+                   'assert u["updater"]["version"]==10;a.stop();p.cleanup()')
             subprocess.run([sys.executable,'-c',check],cwd=app,env=env,check=True)
         finally:
             process.terminate();process.wait(timeout=5);process.stdout.close()

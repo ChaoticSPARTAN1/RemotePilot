@@ -1,3 +1,14 @@
+# 0.10.0-preview - 2026-10-25
+
+Main raw version 11; recovery raw version 10. Same title IDs and original art.
+
+- Read-only log, Luma dump and saved screenshot collection with local previews.
+- Fixed approved catalog; no arbitrary paths, saves, pairing or personal photos.
+- Frozen 4 MiB snapshots, signed chunks and whole-file SHA-256 verification.
+- Private PC copies; no diagnostic content is bundled or uploaded.
+- Deployment/arming gates; recovery remains update only.
+- 60 desktop tests pass; new builds need physical startup/collection testing.
+
 # 0.9.1-preview - 2026-10-25
 
 Main raw title version 10; Recovery version 9. Same title IDs and original HOME

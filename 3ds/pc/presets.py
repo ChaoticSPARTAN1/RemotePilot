@@ -12,7 +12,7 @@ THEME_FIELDS = ("background", "surface", "surface2", "line", "text", "muted", "a
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
 CAPABILITIES = {"screenshot", "stream", "audio", "controller", "console", "input",
                 "report", "log", "perf", "catalog", "preview", "touch",
-                "data-transfer", "homebrew", "upload", "install", "titles", "launch", "system-input"}
+                "diagnostics", "data-transfer", "homebrew", "upload", "install", "titles", "launch", "system-input"}
 
 
 def all_presets():

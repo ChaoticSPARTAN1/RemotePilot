@@ -65,14 +65,14 @@ def verify_cia(path, expected_title, expected_version):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--companion-version', type=int, default=10)
-    parser.add_argument('--updater-version', type=int, default=9)
+    parser.add_argument('--companion-version', type=int, default=11)
+    parser.add_argument('--updater-version', type=int, default=10)
     args = parser.parse_args()
     out = ROOT / 'dist'
     out.mkdir(exist_ok=True)
     files = [stem + suffix for stem in ('RemotePilotHomebrew', 'RemotePilotUpdater')
              for suffix in ('.cia', '.3dsx', '.smdh')]
-    receipt = {'applicationVersion': '0.9.1-preview', 'hardwareVerified': False,
+    receipt = {'applicationVersion': '0.10.0-preview', 'hardwareVerified': False,
                'cia': verify_cia(ROOT / files[0], '000400000f3d5200', args.companion_version),
                'updater': verify_cia(ROOT / 'RemotePilotUpdater.cia', '000400000f3d5300', args.updater_version),
                'files': {}}

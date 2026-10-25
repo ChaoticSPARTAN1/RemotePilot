@@ -28,7 +28,7 @@ jobs:
         run: python 3ds/tools/build_host_tests.py
       - name: Exercise transfer, authentication, failure and receipt handling
         working-directory: 3ds/pc
-        run: python -m unittest test_homebrew test_homebrew_data -q
+        run: python -m unittest test_homebrew test_homebrew_data test_homebrew_diagnostics -q
       - name: Verify instructions, input handling and application palettes
         working-directory: 3ds/pc
         run: |

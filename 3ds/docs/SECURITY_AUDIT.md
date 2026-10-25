@@ -109,3 +109,18 @@ extracted-bundle startup. CI has no console credentials or device access.
 - The prepared owner's Doom pack was staged separately to an identified SD card,
   with all 397 files verified and original saves/logs excluded. Those files and
   all private staging reports are excluded from both distributions.
+
+
+## 2026-10-25 diagnostics review
+
+Fixed source catalogs on both sides exclude saves, pairing/configuration and
+DCIM. Approved Bug It reports exclude receiver.cfg. No request accepts local or
+SD paths. Linked ancestors/files, large files, malformed IDs, offsets and
+unsigned responses are rejected. Device snapshots are bounded, invalidated on
+disarm, and never written back to their sources. Deployments block collection.
+The browser uses textContent and local image blobs, never log HTML. PC copies
+are private ignored runtime data. Existing authentication and physical arming
+are retained; recovery does not expose this capability. Nine new diagnostic
+tests cover gates, mutation consistency, corruption, source exclusions, Bug It
+and private end-to-end collection; 60 combined tests passed. Physical acceptance
+is pending.

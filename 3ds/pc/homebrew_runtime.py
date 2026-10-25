@@ -14,8 +14,9 @@ from homebrew_protocol import CHUNK, HEX, MAX_CIA, CompanionClient, CompanionInt
 from luma_input import LumaInput
 from homebrew_download import PublicHTTPSHandler
 from homebrew_data import DataManager
+from homebrew_diagnostics import DiagnosticsManager
 
-CAPS = {"upload", "install", "titles", "launch", "data-transfer"}
+CAPS = {"upload", "install", "titles", "launch", "data-transfer", "diagnostics"}
 COMPANION_TITLE = "000400000f3d5200"
 UPDATER_TITLE = "000400000f3d5300"
 TRANSFER_CHUNK = 16 * 1024  # shorter stop-and-wait writes also support the original bootstrap
@@ -59,6 +60,7 @@ class HomebrewAdapter:
             pass
         self._load()
         self.data = DataManager(self)
+        self.diagnostics = DiagnosticsManager(self)
 
     def set_active(self, callback):
         self.active = callback
@@ -71,7 +73,7 @@ class HomebrewAdapter:
     def configure(self, device_host, port=38765):
         host = private_host(device_host)
         with self.lock:
-            if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
+            if (self.data.busy() or self.diagnostics.busy()) or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                 raise ValueError("Finish or cancel the active job before changing pairing")
             token = secrets.token_hex(32)
             if self.config_path.exists():
@@ -171,6 +173,7 @@ class HomebrewAdapter:
                     "system": self.system.status(),
                     "handoff": dict(self.handoff) if self.handoff else None,
                     "dataTransfer": self.data.snapshot(),
+                    "diagnostics": self.diagnostics.snapshot(),
                     "screenStreaming": False, "audioStreaming": False, "twl": False}
 
     def _require(self, cap):
@@ -195,7 +198,7 @@ class HomebrewAdapter:
     def new_job(self, expected_hash, expected_title, install=False):
         self._require("upload")
         self._require_armed()
-        if self.data.busy():
+        if (self.data.busy() or self.diagnostics.busy()):
             raise ValueError("Finish game-data transfer before sending an installer")
         if self.remote.get('job', {}).get('state') == 'unknown':
             raise ValueError('Review the previous console outcome before starting another deployment')
@@ -421,6 +424,8 @@ class HomebrewAdapter:
         raise ValueError("Job timeout waiting for progress or approval; inspect console status; no automatic retry")
 
     def homebrew_request(self, action, data):
+        if action.startswith("diag-"):
+            return self.diagnostics.request(action, data)
         if action.startswith("data-"):
             return self.data.request(action, data)
         if action == "status":
@@ -483,7 +488,7 @@ class HomebrewAdapter:
             if title in (COMPANION_TITLE, UPDATER_TITLE) and data.get("preset"):
                 raise ValueError("Companion updates use the homebrew connection, without a game handoff")
             with self.lock:
-                if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
+                if (self.data.busy() or self.diagnostics.busy()) or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                     raise ValueError("Finish or cancel the deployment before launching")
             self.system.release()
             ident = secrets.token_hex(16)
@@ -514,7 +519,7 @@ class HomebrewAdapter:
                 self.system.release()
             elif data.get("enabled") is True and data.get("inputRedirectionEnabled") is True and self.client:
                 with self.lock:
-                    if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
+                    if (self.data.busy() or self.diagnostics.busy()) or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                         raise ValueError("System input stays off during deployment and console approval")
                 self.system.arm(self.client.host, data.get("owner"), data.get("version"))
             else:

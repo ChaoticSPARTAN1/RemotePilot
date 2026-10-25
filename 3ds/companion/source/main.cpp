@@ -173,7 +173,10 @@ static void step() {
         }
     }
 }
+#include "diagnostics.hpp"
+
 static std::string dispatch(const std::string& action,const std::string& body) {
+    if(action.compare(0,5,"diag-")==0)return diagnostics::dispatch(action,body);
     if(action.compare(0,5,"data-")==0)return dataDispatch(action,body);
     if(action=="status")return "{\"ok\":true,\"protocol\":1,\"resident\":false,\"armed\":"+
         std::string(armed?"true":"false")+",\"applicationTitleId\":\""+idText(OwnId)+
@@ -181,7 +184,7 @@ static std::string dispatch(const std::string& action,const std::string& body) {
         ",\"readyForTransfer\":"+(armed&&idleView()?"true":"false")+
         ",\"autonomousSupported\":true,\"autonomousEnabled\":"+(armed&&autonomous?"true":"false")+
         ",\"updateTarget\":\""+(Updater?idText(CompanionId):std::string())+
-        "\",\"capabilities\":[\"upload\",\"install\",\"titles\",\"launch\""+std::string(Updater?"":",\"data-transfer\"")+"],\"fastDataTransfer\":"+(Updater?"false":"true")+",\"freeBytes\":"+std::to_string(platform::freeSpace())+",\"dataJob\":"+dataStatus()+",\"job\":"+jobJson()+"}";
+        "\",\"capabilities\":[\"upload\",\"install\",\"titles\",\"launch\""+std::string(Updater?"":",\"data-transfer\",\"diagnostics\"")+"],\"fastDataTransfer\":"+(Updater?"false":"true")+",\"freeBytes\":"+std::to_string(platform::freeSpace())+",\"dataJob\":"+dataStatus()+",\"job\":"+jobJson()+"}";
     if(action=="titles") {
         if(!body.empty())return error("unexpected-body");
         std::vector<Title> titles;if(!inventory(titles))return error("inventory-failed");
@@ -392,13 +395,13 @@ int main(int argc,char** argv) {
         if(keys&8)break;
         if(keys&4) {
             armed=!armed;armedAt=platform::milliseconds();
-            if(!armed)autonomous=false;
+            if(!armed){autonomous=false;diagnostics::snapshot.clear();diagnostics::snapshot.shrink_to_fit();diagnostics::snapshotId.clear();}
             if(!armed&&dataBusy())dataDispatch("data-cancel",game_data::data.id);
             if(!armed&&busy())dispatch("cancel",job.id);
         }
         if(armed&&platform::milliseconds()-armedAt>15*60*1000ULL) {
             autonomous=false;
-            if(!busy())armed=false;
+            if(!busy()){armed=false;diagnostics::snapshot.clear();diagnostics::snapshot.shrink_to_fit();diagnostics::snapshotId.clear();}
         }
         if(keys&16) {
             if(autonomous) {

@@ -49,3 +49,12 @@ frames, SD readback hashing, existing-file protection and physical cancellation.
 New-model CPU/cache boost is requested by the main app. Files are limited to
 2 GiB minus one byte, packages to 64 GiB/8192 files. Recovery remains app-only.
 See [GAME_DATA](docs/GAME_DATA.md) for setup and limits.
+
+
+## Remote diagnostics (0.10.0-preview)
+
+Main build **11**, recovery **10**. Collect supported logs, crash dumps and saved
+bug screenshots from the main companion. Copies are read-only, size bounded,
+SHA-256 checked and private to the PC. See [diagnostics](docs/DIAGNOSTICS.md).
+The existing aircraft/shield artwork and pairing are retained. Hardware
+acceptance of these new versions is pending.

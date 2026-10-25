@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Remote Pilot</title>
-  <script src="/homebrew_flow.js" defer></script><script src="/data_transfer_ui.js" defer></script><script src="/homebrew.js" defer></script>
+  <script src="/homebrew_flow.js" defer></script><script src="/data_transfer_ui.js" defer></script><script src="/diagnostics_ui.js" defer></script><script src="/homebrew.js" defer></script>
   <link rel="stylesheet" href="/viewer.css"><link rel="stylesheet" href="/themes.css"><script src="/viewer.js" defer></script>
 </head>
 <body><main>
@@ -55,6 +55,16 @@
       <details><summary>HOME Menu controls · requires Luma InputRedirection</summary><div id="hb-system-guide" class="feature-guide"><p class="eyebrow">HOME MENU · SEPARATE CONTROL SESSION</p><h3 id="hb-system-guide-title">Set up system input</h3><p id="hb-system-guide-text">Enable Luma InputRedirection on the 3DS, then arm this tab below.</p><p id="hb-system-guide-next" class="feature-next">Next: watch the console to confirm each press. These controls have no delivery acknowledgement.</p></div><p class="micro">Select the 3DS Homebrew preset before arming. In Rosalina, manually enable InputRedirection. These UDP controls have no acknowledgement; watch the console. Earlier setup notes record Luma 13.4. Disable InputRedirection on the console to stop injection if the PC or network fails.</p><label>Luma version <input id="hb-luma-version" value="13.4" maxlength="8"></label><label class="enable-line"><input id="hb-system-arm" type="checkbox"><span>I enabled InputRedirection; arm bounded system controls in this tab</span></label><div class="keypad"><button data-hb-button="UP" type="button">↑</button><button data-hb-button="DOWN" type="button">↓</button><button data-hb-button="LEFT" type="button">←</button><button data-hb-button="RIGHT" type="button">→</button><button data-hb-button="A" type="button">A</button><button data-hb-button="B" type="button">B</button><button id="hb-home" type="button">HOME press + release</button><button id="hb-release" type="button">Release system input</button></div><form id="hb-touch" class="motion-form"><label>Touch X <input name="x" type="number" min="0" max="319" value="160" required></label><label>Touch Y <input name="y" type="number" min="0" max="239" value="120" required></label><button type="submit">Tap lower screen</button></form><p id="hb-system-state" class="micro">System controls off</p></details>
       <p class="micro">The companion runs only while open. Launch acknowledgement begins a handoff; the game connection confirms it. HOME visibility, DS/DSi/TWiLight mode and system video/audio streaming are unverified and unavailable.</p>
       </details>
+      <section id="diagnostics-panel" class="feature-guide" aria-labelledby="diag-title">
+        <h3 id="diag-title">Logs, crash dumps &amp; bug images</h3>
+        <p class="micro">Open the main companion and press X. Refresh to find supported game logs, Luma crash dumps and saved screenshots. Copies stay privately on this PC.</p>
+        <div class="console-form"><label for="diag-file">Diagnostic file <select id="diag-file"></select></label><button id="diag-refresh" type="button">Refresh files</button><button id="diag-collect" type="button">Collect file</button></div>
+        <p id="diag-state" role="status">Connect the main companion to read diagnostics.</p>
+        <p id="diag-detail" class="micro">Up to 4 MiB per file. Existing files on the console are preserved. Screenshot collection reads saved images; the companion runs separately from games.</p>
+        <a id="diag-download" hidden>Download verified copy</a>
+        <pre id="diag-preview" style="max-height:24rem;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere" hidden></pre>
+        <img id="diag-image" alt="Collected bug screenshot" style="max-width:100%;max-height:30rem;object-fit:contain" hidden>
+      </section>
       <section id="game-data-panel" class="feature-guide">
         <p class="eyebrow">GAME DATA - FAST WI-FI TRANSFER</p><h3>Game assets</h3>
         <p>Some homebrew engines need files beside the CIA. Keep the game closed until all files are checked.</p>

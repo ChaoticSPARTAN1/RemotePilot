@@ -15,7 +15,8 @@
     "titles",
     "launch",
     "system-input",
-    "data-transfer"
+    "data-transfer",
+    "diagnostics"
   ],
   "theme": {
     "background": "#10141c",

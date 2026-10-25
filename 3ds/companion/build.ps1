@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
     [switch]$HostTests,
-    [ValidateRange(1,65535)][int]$CompanionVersion=10,
-    [ValidateRange(1,65535)][int]$UpdaterVersion=9
+    [ValidateRange(1,65535)][int]$CompanionVersion=11,
+    [ValidateRange(1,65535)][int]$UpdaterVersion=10
 )
 $ErrorActionPreference = 'Stop'
 $bash = 'C:\msys64\usr\bin\bash.exe'

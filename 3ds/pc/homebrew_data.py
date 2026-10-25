@@ -138,7 +138,7 @@ class DataManager:
         adapter = self.adapter
         adapter._require('data-transfer'); adapter._require_armed()
         package = self.load(ident)
-        if self.busy() or self.job.get('state') in {'unknown', 'interrupted'} or \
+        if adapter.diagnostics.busy() or self.busy() or self.job.get('state') in {'unknown', 'interrupted'} or \
                 any(job['state'] not in {'uploaded', 'installed', 'cancelled', 'failed', 'launching'} for job in adapter.jobs.values()):
             raise ValueError('Finish or review the existing deployment before starting game data')
         if not adapter.remote.get('fastDataTransfer'):

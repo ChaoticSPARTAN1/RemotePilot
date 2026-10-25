@@ -20,6 +20,7 @@ CHUNK = 65536
 TITLE = re.compile(r"00040000[0-9a-f]{8}\Z")
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 ACTIONS = {"status", "titles", "begin", "chunk", "verify", "install", "cancel", "launch", "job"}
+ACTIONS.update({'diag-list','diag-open','diag-read','diag-close'})
 ACTIONS.update({'data-begin', 'data-status', 'data-end', 'data-cancel'})
 
 
@@ -125,7 +126,7 @@ class CompanionClient:
         with self._io_lock:
             # Only reads may retry. Mutations are sent exactly once, then their
             # exact job receipt may be inspected by the deployment worker.
-            read_only = action in ('status','titles','job','data-status')
+            read_only = action in ('status','titles','job','data-status','diag-list','diag-read')
             deadline = time.monotonic() + 6
             for attempt in range(12 if read_only else 1):
                 try:
