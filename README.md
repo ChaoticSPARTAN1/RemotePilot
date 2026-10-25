@@ -8,6 +8,13 @@ network configuration.
 
 ## Start
 
+For CIA transfers, wireless companion updates and the original 3DS dashboards,
+use the separate **[3DS tool bundle](3ds/README.md)**. It includes the PC tool,
+main/Recovery CIA and 3DSX builds, matching source, artwork, setup instructions
+and security/legal review. All platform-specific additions live under `3ds/`.
+The native companion is GPL-3.0-only; the independent PC code remains MIT.
+The current 0.8.0 release is a preview pending fresh hardware validation.
+
 Install Python 3.11 or newer. On Windows, open `run.cmd`; on macOS or Linux, run
 `sh run.sh`. The launcher opens the viewer at a free loopback address. No fixed
 viewer port, cloud account, or inbound PC firewall rule is required. To avoid

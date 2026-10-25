@@ -1,0 +1,38 @@
+{
+  "applicationVersion": "0.8.0-preview",
+  "hardwareVerified": false,
+  "cia": {
+    "titleId": "000400000f3d5200",
+    "version": 8
+  },
+  "updater": {
+    "titleId": "000400000f3d5300",
+    "version": 7
+  },
+  "files": {
+    "RemotePilotHomebrew.cia": {
+      "size": 512960,
+      "sha256": "6d7c15bb9a05cba7c919c9e8728298b207e57925e0deec9daa1f6e5c358936ab"
+    },
+    "RemotePilotHomebrew.3dsx": {
+      "size": 721988,
+      "sha256": "d9db5db4f379213df3e3413357d9731574e6a1226701eb9d264e66de25cb6ce6"
+    },
+    "RemotePilotHomebrew.smdh": {
+      "size": 14016,
+      "sha256": "5bf759e87914abc523b1860d2e8a69593616999464dd8232832278952bb90445"
+    },
+    "RemotePilotUpdater.cia": {
+      "size": 509376,
+      "sha256": "d478cb56a44fe3d7f540f6286745a84f5c728336017e91903662a8163dda30ef"
+    },
+    "RemotePilotUpdater.3dsx": {
+      "size": 722216,
+      "sha256": "1f8f2a83ec8c4618fdc467e1fcbe2c32026ff168c34585ee747a849c51416a97"
+    },
+    "RemotePilotUpdater.smdh": {
+      "size": 14016,
+      "sha256": "6acfafc35bf97e23ea16176b9f5530c936f008e4dc862f7a0fa9be93d00c118f"
+    }
+  }
+}

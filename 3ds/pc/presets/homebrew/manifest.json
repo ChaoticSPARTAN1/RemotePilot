@@ -1,0 +1,14 @@
+{
+  "id": "homebrew",
+  "name": "3DS Homebrew",
+  "order": 10,
+  "mark": "HB",
+  "transport": "python-v1",
+  "models": ["original", "new-xl"],
+  "capabilities": ["homebrew", "upload", "install", "titles", "launch", "system-input"],
+  "theme": {
+    "background": "#10141c", "surface": "#1b2432", "surface2": "#151c28",
+    "line": "#3a4a60", "text": "#edf5ff", "muted": "#a8b9cf",
+    "accent": "#78c9b4", "accent2": "#c1eadf", "glow": "#427d70"
+  }
+}
