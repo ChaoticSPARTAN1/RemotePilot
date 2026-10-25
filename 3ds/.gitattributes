@@ -1,0 +1,4 @@
+# Preserve manifest and corresponding-source byte identity on every platform.
+* -text whitespace=cr-at-eol
+# Retain upstream notices exactly, including their original whitespace.
+companion/third_party/* -whitespace

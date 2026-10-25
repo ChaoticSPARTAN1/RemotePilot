@@ -1,0 +1,12 @@
+local/
+dist/
+**/local/
+**/dist/
+**/build/
+**/build-updater/
+**/__pycache__/
+*.pyc
+*.cfg
+*.sqlite3
+*.log
+*.tmp
