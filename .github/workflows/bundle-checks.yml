@@ -1,7 +1,13 @@
 name: 3DS bundle checks
 on:
-  push:
   pull_request:
+    paths:
+      - '3ds/**'
+      - '.github/workflows/bundle-checks.yml'
+  workflow_dispatch:
+concurrency:
+  group: bundle-checks-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
