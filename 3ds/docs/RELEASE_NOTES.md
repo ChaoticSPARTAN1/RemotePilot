@@ -1,3 +1,25 @@
+# 0.10.1-preview - 2026-10-25
+
+Main raw version 12; recovery raw version 11. Same title IDs, pairing and original
+aircraft/shield artwork. New binaries are desktop-tested previews, not installed
+or hardware-tested in this release session. Prior release assets are unchanged.
+
+- Response writes use at most 4 KiB per send, below libctru's 8 KiB IPC-path
+  boundary, and handle partial writes and temporary EINTR/EAGAIN errors under
+  the original fixed deadline. Authentication and deployment rules are unchanged.
+- A production send-loop regression covers large payloads, partial progress,
+  temporary errors, deadline exhaustion, closed sockets and permanent errors.
+  A signed 120-entry diagnostic catalog regression covers responses over 8 KiB.
+- Portable exports now explicitly include diagnostic modules/UI/tests and derive
+  release versions from the actual artifact receipt instead of stale constants.
+- Hardware evidence for main 11: boot/authenticated arming and direct 512-byte
+  text reads completed a 114,901-byte log with full checksum/readback validation.
+  This is not file-list, default-large-chunk, image or dump hardware acceptance.
+- Main 11's diagnostic listing resets the connection; small requests work. The
+  larger SOC send path is a suspected cause, not a proven hardware diagnosis.
+  Next-session hardware validation is required before calling this fix accepted.
+- Owner diagnostic content and detailed evidence stay private and are not shipped.
+
 # 0.10.0-preview - 2026-10-25
 
 Main raw version 11; recovery raw version 10. Same title IDs and original art.

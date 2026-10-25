@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
     [switch]$HostTests,
-    [ValidateRange(1,65535)][int]$CompanionVersion=11,
-    [ValidateRange(1,65535)][int]$UpdaterVersion=10
+    [ValidateRange(1,65535)][int]$CompanionVersion=12,
+    [ValidateRange(1,65535)][int]$UpdaterVersion=11
 )
 $ErrorActionPreference = 'Stop'
 $bash = 'C:\msys64\usr\bin\bash.exe'
@@ -32,6 +32,9 @@ try {
             $displayTestScript = 'cd /%DRIVE%; /usr/bin/g++ -Wall -Wextra -Werror -std=gnu++17 -O1 -g -ffunction-sections -fdata-sections -Itests -Isource tests/platform_display_test.cpp source/platform.cpp -Wl,--gc-sections -o build/display-test.exe && build/display-test.exe'
             & $bash -lc $displayTestScript.Replace('%DRIVE%', $drive.ToLowerInvariant())
             if ($LASTEXITCODE -ne 0) { throw 'Native display regression test failed.' }
+            $socketTestScript = 'cd /%DRIVE%; /usr/bin/g++ -Wall -Wextra -Werror -std=gnu++17 -O1 -g -Isource tests/socket_io_test.cpp -o build/socket-io-test.exe && build/socket-io-test.exe'
+            & $bash -lc $socketTestScript.Replace('%DRIVE%', $drive.ToLowerInvariant())
+            if ($LASTEXITCODE -ne 0) { throw 'Socket send regression test failed.' }
         }
         $makerom = Join-Path $PSScriptRoot 'tools\makerom\makerom.exe'
         $banner = Join-Path $PSScriptRoot 'tools\bannertool\windows-x86_64\bannertool.exe'

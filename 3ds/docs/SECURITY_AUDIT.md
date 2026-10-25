@@ -124,3 +124,48 @@ are retained; recovery does not expose this capability. Nine new diagnostic
 tests cover gates, mutation consistency, corruption, source exclusions, Bug It
 and private end-to-end collection; 60 combined tests passed. Physical acceptance
 is pending.
+
+## End-of-session diagnostics audit — 2026-10-25
+
+Reviewed native authentication/arming and fixed-ID catalogs, directory/file
+checks, snapshot bounds, PC request validation, private destinations, final
+hash/readback, operation exclusion and text/image rendering. The release still
+requires the existing pairing proof and physical arming workflow; it adds no
+arbitrary path or writeback operation, remote approval, executable preview or
+cloud upload. Read-only snapshot operations do not install or launch software.
+Logs and dumps can contain sensitive information despite their approved paths;
+the selected copies remain ignored private local data, never release content.
+This is a bounded source/distribution review, not independent certification.
+
+Main 11 was booted, authenticated and armed on the owner's console. A direct
+approved text-file fetch using 512-byte signed reads passed full-file and PC
+readback SHA-256 validation (114,901 bytes in approximately 16 seconds). The
+diagnostic-list request still reset the connection. Default large chunks,
+dump/image retrieval and the complete UI flow have no hardware acceptance.
+Owner paths, diagnostic bytes, hashes and machine identifiers are not published.
+
+Inspection of pinned libctru 2.7.0 `soc_sendto.c` shows different IPC methods
+below/at 8 KiB. The former send loop could issue the entire response in one
+nonblocking call and treated temporary send errors as final. New 12/11 builds
+limit sends to 4 KiB and retry only unconsumed response bytes after readiness,
+under the unchanged absolute deadline; interrupted readiness is rechecked.
+There are no new install/data-command retries. A desktop fault-injection test
+checks partial/transient/hard-failure behavior and a signed large-catalog test
+covers the response boundary. This addresses a plausible transport limitation;
+the exact cause of the hardware listing failure remains unproven and 12/11
+still require next-session acceptance. No further console operation was made
+during this audit.
+
+All 61 local protocol/install/data/diagnostic tests passed with no skips, along
+with the production socket/display/deferred-launch checks and existing Node
+guidance/theme/input checks. Both exported layouts passed reproducible offline
+extraction/startup, CIA content/identity/version checks, matching-source checks
+and scans against the four local credential values without disclosure. No
+GitHub Actions job was requested for this audit; private CI remains manual-only
+and public CI remains pull-request/manual-only.
+
+Fixed catalogs and lstat checks reduce path exposure but are not an OS sandbox
+against another privileged process swapping files between checks. Snapshot
+allocation and enumeration remain bounded, not a complete denial-of-service
+assessment. Existing cleartext LAN confidentiality and Luma/HID limitations
+continue to apply. Artwork and license notices were preserved.

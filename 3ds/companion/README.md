@@ -5,11 +5,12 @@ Wi-Fi CIA transfers, verified installation and application launch. Both have
 original HOME artwork and native dashboards: teal/silver for the main app,
 purple/gold for Recovery. Artwork sources are in `artwork/`.
 
-This release is **0.9.1-preview**, main raw title version **10** and Recovery
-version **9**. Earlier main 7 / Recovery 6 have owner-device installation and
-boot evidence. This exact 10/9 pair has passed desktop tests and compilation;
-fresh physical installation/boot testing remains pending. Desktop AM services
-are simulated and cannot establish console behavior.
+This release is **0.10.1-preview**, main raw title version **12** and Recovery
+version **11**. Main 11 boot, authentication and direct small-chunk text retrieval
+were confirmed on hardware. Its diagnostic listing failed; large default reads,
+dumps and images were not accepted on hardware. This new 12/11 pair includes
+bounded response writes and needs next-session hardware acceptance. Desktop AM
+services are simulated and cannot establish console behavior.
 
 | Application | SD base application title | Purpose |
 | --- | --- | --- |
@@ -117,7 +118,8 @@ They never move the checkout. Packaging outputs go to `dist/`.
 
 `Get-BuildTools.ps1` verifies pinned downloads before extraction. Asset generation
 creates icons, banners and version headers for each variant. The CIA package
-contains no upstream boot-logo blob; original HOME and in-app artwork remain.
+uses makerom's generic Homebrew boot logo with its upstream MIT notice;
+original HOME and in-app artwork remain unchanged.
 `verification.json` checks actual CIA title/version and all six binary hashes.
 The pinned makerom supports raw versions 1..15, 1024..1039, etc.; the build fails
 on unsupported bits or a metadata mismatch. See `HARDWARE_TESTS.md` before

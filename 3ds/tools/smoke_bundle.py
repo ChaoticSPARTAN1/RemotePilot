@@ -72,8 +72,8 @@ def main():
             # Exercise sibling apps discovery directly, without any console key.
             check=('from homebrew_runtime import HomebrewAdapter;import tempfile;'
                    'p=tempfile.TemporaryDirectory();a=HomebrewAdapter(p.name,{});'
-                   'u=a.available_updates();assert u["companion"]["version"]==11;'
-                   'assert u["updater"]["version"]==10;a.stop();p.cleanup()')
+                   'u=a.available_updates();assert u["companion"]["version"]==12;'
+                   'assert u["updater"]["version"]==11;a.stop();p.cleanup()')
             subprocess.run([sys.executable,'-c',check],cwd=app,env=env,check=True)
         finally:
             process.terminate();process.wait(timeout=5);process.stdout.close()

@@ -25,8 +25,8 @@ Corresponding companion source is included with this local build.
 The matching libctru 2.7.0 source is bundled in `third_party/`, pinned to upstream
 tag object/commit 36fe1ada5b7ebe53ba4decda36d764a55f8fefb6. Toolchain runtime notices
 for newlib 4.6.0 and the GCC Runtime Library Exception are also reproduced there.
-The toolchain executables themselves are not included. Public builds use no
-third-party boot-logo blob; HOME icon/banner and in-app artwork are original
+The toolchain executables themselves are not included. The generic Homebrew
+boot-logo provenance is noted below; HOME icon/banner and in-app artwork are original
 RemotePilot assets, generated with AI assistance and supplied under the companion
 license. No exclusive copyright or third-party endorsement is claimed for AI output.
 

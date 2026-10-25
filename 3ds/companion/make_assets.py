@@ -8,8 +8,8 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent
 parser = argparse.ArgumentParser()
-parser.add_argument('--companion-version', type=int, default=11)
-parser.add_argument('--updater-version', type=int, default=10)
+parser.add_argument('--companion-version', type=int, default=12)
+parser.add_argument('--updater-version', type=int, default=11)
 args = parser.parse_args()
 if not all(0 <= v <= 65535 for v in (args.companion_version, args.updater_version)):
     parser.error('Raw title versions must fit an unsigned 16-bit value')

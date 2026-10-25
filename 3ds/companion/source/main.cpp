@@ -3,6 +3,7 @@
 #include "platform.hpp"
 #include "sha256.hpp"
 #include "build_version.hpp"
+#include "socket_io.hpp"
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
@@ -265,15 +266,18 @@ static std::string dispatch(const std::string& action,const std::string& body) {
     return error("unsupported-action");
 }
 static bool socketReady(int s,bool writing) {
-    uint64_t now=platform::milliseconds();if(now>=socketDeadline)return false;
-    uint64_t left=socketDeadline-now;timeval wait{long(left/1000),long((left%1000)*1000)};
-    fd_set fds;FD_ZERO(&fds);FD_SET(s,&fds);
-    return select(s+1,writing?nullptr:&fds,writing?&fds:nullptr,nullptr,&wait)>0;
+    for(;;) {
+        uint64_t now=platform::milliseconds();if(now>=socketDeadline)return false;
+        uint64_t left=socketDeadline-now;timeval wait{long(left/1000),long((left%1000)*1000)};
+        fd_set fds;FD_ZERO(&fds);FD_SET(s,&fds);
+        int result=select(s+1,writing?nullptr:&fds,writing?&fds:nullptr,nullptr,&wait);
+        if(result<0&&errno==EINTR)continue;
+        return result>0;
+    }
 }
 static bool sendAll(int s,const std::string& data) {
-    size_t done=0;while(done<data.size()){
-        if(!socketReady(s,true))return false;
-        int n=send(s,data.data()+done,data.size()-done,0);if(n<=0)return false;done+=n;}return true;
+    return socket_io::sendAll(data,[&](){return socketReady(s,true);},
+        [&](const char* p,size_t count){return send(s,p,count,0);});
 }
 static bool readExact(int s,std::string& data,size_t size) {
     data.resize(size);size_t done=0;

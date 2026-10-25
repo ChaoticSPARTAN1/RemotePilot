@@ -1,5 +1,12 @@
 # Setup and use
 
+**Current preview limit:** main 11 boot and direct small-chunk text retrieval
+passed on hardware, but its file-list request failed. The 0.10.1 / main 12
+transport candidate is desktop-tested only. Full diagnostic listing, default
+large reads and image/dump collection still need acceptance in a later session.
+Do not interpret a connected/armed status or a successful small log read as
+confirmation that every diagnostic operation works on the console.
+
 1. Extract the complete bundle, keeping `pc`, `apps` and `companion` together.
 2. Install Python 3.11 or newer. Open `pc/run.cmd`, or run
    `python3 pc/receiver.py serve`. Open http://127.0.0.1:38764/ in Chrome.

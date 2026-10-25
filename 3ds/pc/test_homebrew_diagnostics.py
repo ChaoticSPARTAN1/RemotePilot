@@ -48,6 +48,17 @@ class DiagnosticsTests(unittest.TestCase):
         for value in ('../doom3/log.txt','0'*32,'/doom3/log.txt'):
             with self.assertRaises(ValueError):self.client.call('diag-open',value.encode())
 
+    def test_large_catalog_crosses_soc_send_boundary_with_valid_signed_reply(self):
+        self.key(4)
+        for folder in ('luma/screenshots','doom3/screenshots','3ds/mw3ds/screenshots','3ds/mw3ds/bug-it','3ds/RemotePilotHomebrew/bug-images'):
+            for number in range(24):
+                self.fixture(folder+'/'+('image_'+str(number).zfill(2)+'_'+'x'*70+'.png'),b'synthetic image fixture')
+        reply=self.client.call('diag-list')
+        self.assertEqual(len(reply['files']),120)
+        import json
+        self.assertGreater(len(json.dumps(reply).encode()),8192)
+        for row in reply['files']:validate(row)
+
     def test_snapshot_stays_consistent_if_source_changes_and_never_writes_source(self):
         self.key(4);data=bytes(range(256))*140
         path=self.fixture('doom3/log.txt',data)

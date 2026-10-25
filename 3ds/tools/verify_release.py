@@ -35,7 +35,7 @@ def verify(secrets_dir=None):
     spec=importlib.util.spec_from_file_location('release_protocol',ROOT/'pc/homebrew_protocol.py')
     protocol=importlib.util.module_from_spec(spec);spec.loader.exec_module(protocol)
     verification=json.loads((ROOT/'apps/verification.json').read_text(encoding='utf-8'))
-    for stem,title,version in (('RemotePilotHomebrew','000400000f3d5200',11),('RemotePilotUpdater','000400000f3d5300',10)):
+    for stem,title,version in (('RemotePilotHomebrew','000400000f3d5200',12),('RemotePilotUpdater','000400000f3d5300',11)):
         info=protocol.cia_info(ROOT/'apps'/(stem+'.cia'))
         if info['titleId']!=title or info['version']!=version:raise ValueError('CIA identity/version mismatch')
         for suffix in ('.cia','.3dsx','.smdh'):
@@ -46,7 +46,7 @@ def verify(secrets_dir=None):
             relative=Path(name).relative_to('RemotePilot-Homebrew')
             local=ROOT/'companion'/relative
             if '..' in relative.parts or not local.is_file() or archive.read(name)!=local.read_bytes():raise ValueError('Corresponding-source mismatch: '+name)
-        for name in ('source/main.cpp','source/platform.cpp','source/sha256.cpp','LICENSE','NOTICE.md','third_party/libctru-2.7.0-source.tar.gz'):
+        for name in ('source/main.cpp','source/platform.cpp','source/sha256.cpp','source/diagnostics.hpp','source/data_transfer.hpp','source/socket_io.hpp','tests/socket_io_test.cpp','LICENSE','NOTICE.md','third_party/libctru-2.7.0-source.tar.gz'):
             if 'RemotePilot-Homebrew/'+name not in archive.namelist():raise ValueError('Missing corresponding source: '+name)
     vendor=ROOT/'companion/third_party/libctru-2.7.0-source.tar.gz'
     if hashlib.sha256(vendor.read_bytes()).hexdigest()!='c22913738ce3b1da5e52f26150d245f602c04f6c72cf4b81352f32c52d411e5f':raise ValueError('Vendored library source changed')

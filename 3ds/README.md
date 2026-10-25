@@ -6,7 +6,7 @@ general RemotePilot application. Start with [SETUP](docs/SETUP.md).
 | Directory | Contents |
 | --- | --- |
 | `pc/` | Independent MIT PC tool, themed web UI and included presets |
-| `apps/` | Main companion build **10**, recovery updater build **9**, 3DSX/SMDH files, SHA-256 receipts and matching GPL source archive |
+| `apps/` | Main companion build **12**, recovery updater build **11**, 3DSX/SMDH files, SHA-256 receipts and matching GPL source archive |
 | `companion/` | GPL-3.0-only native source, original artwork, build scripts, tests and third-party source/notices |
 | `docs/` | Setup, security audit, preliminary distribution/license review and release notes |
 | `tools/` | Release verification, desktop test compilation and extracted-bundle checks |
@@ -26,10 +26,11 @@ private distribution adds Halo, Morrowind and WaW Zombies integration presets;
 those presets require matching independently installed device/game builds.
 They are not game downloads.
 
-These are preview builds. Builds 7/6 were installed and exercised on an owner's
-console; the 8/7 audit builds add receipt recovery hardening and omit third-party
-boot-logo data. Their new native binaries have desktop simulation and graphics
-coverage, but a fresh physical installation/boot test remains pending. See the
+These are preview builds. Main 11 boot, authentication and direct 512-byte text
+reads passed on hardware. Main 11 diagnostic listing failed, and default large
+reads/dumps/images were not accepted on hardware. This new 12/11 pair bounds
+response writes and handles temporary socket errors, but has no new hardware
+acceptance. Original aircraft/shield artwork and pairing are retained. See the
 [audit's scope and remaining limits](docs/SECURITY_AUDIT.md).
 
 

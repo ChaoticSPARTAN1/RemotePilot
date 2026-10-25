@@ -66,3 +66,18 @@ Original PC code follows the existing MIT license; companion code follows GPL-3.
 Existing notices and original artwork are preserved. Matching source accompanies
 both native apps. No game assets, owner logs, crash dumps, screenshots, saves,
 credentials or personal network configuration are included.
+
+## End-of-session provenance check — 2026-10-25
+
+The bounded socket loop and its synthetic tests are original project code under
+the existing native GPL-3.0-only license. The new PC packaging changes remain
+MIT. No external implementation was copied for the socket correction. The
+libctru source was inspected as a reference; its pinned matching archive and
+notice remain included. The generic boot-logo notice was checked against
+[makerom's tagged MIT license](https://github.com/3DSGuy/Project_CTR/blob/makerom-v0.19.0/makerom/LICENSE)
+and its tagged `makerom/src/ncch_logo.h` source. Original aircraft/shield assets
+are preserved byte-for-byte. Matching complete native source accompanies each
+new build; old release assets are retained unchanged. Source-access decisions
+continue to follow the cited GPL section 6(d) distribution method. No owner
+game data, logs, dumps, screenshots, saves or credentials are distributed.
+This remains a preliminary provenance/license review, not legal clearance.

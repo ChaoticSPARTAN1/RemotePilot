@@ -1,5 +1,5 @@
 {
-  "archive": "RemotePilot-3DS-public-0.10.0-preview.zip",
+  "archive": "RemotePilot-3DS-public-0.10.1-preview.zip",
   "files": {
     ".gitattributes": {
       "sha256": "8b1b81c43c4dd991c2ad3858cfe88bc15dc5453172f0abf610f8f63e5f612170",
@@ -10,31 +10,31 @@
       "size": 110
     },
     "README.md": {
-      "sha256": "7461afc999f0abcf18adb379dcc65653f46308f185803ccc8f14e3154777200f",
-      "size": 3470
+      "sha256": "a72552092eec4f6648cd562c54b8bad9152d002e54ef85488942e7092a473869",
+      "size": 3544
     },
     "apps/RemotePilotHomebrew-source.zip": {
-      "sha256": "337ba2ffa889e89fe52cfebb45e4fe2b0f737be19422b95d8a71cbc6cc88e78a",
-      "size": 9272088
+      "sha256": "97118a14aa30045bd94ed38328a503419c6c78613b3f36a868b65c48ffd6503c",
+      "size": 9273603
     },
     "apps/RemotePilotHomebrew.3dsx": {
-      "sha256": "f8cb559a5557ddf20b8818c8856fa3f8d7f7ba9ea15eaeb5b5f5a5f5aa8cf06b",
-      "size": 738832
+      "sha256": "837adabe29eaa0bcd25de3c84bb9cb45c6f4b2bd5b412bd79baf1a3219b7a0dc",
+      "size": 739136
     },
     "apps/RemotePilotHomebrew.cia": {
-      "sha256": "aa3f01cbebf02dccec135a5d7f2d1d0c6885c81fe156c171118fbe1d6e84c44c",
-      "size": 533440
+      "sha256": "72582b1bb0b43f2bf1f2540b3f79d08a40a1882f4d856825ce7f1fd1b0d1770d",
+      "size": 533952
     },
     "apps/RemotePilotHomebrew.smdh": {
       "sha256": "5bf759e87914abc523b1860d2e8a69593616999464dd8232832278952bb90445",
       "size": 14016
     },
     "apps/RemotePilotUpdater.3dsx": {
-      "sha256": "17f820b5be3e0486e90b42507fa24be41ad25531cfa9f2ac29e8867f0b8d0bee",
-      "size": 733364
+      "sha256": "cc904805e33b19118c6a7186cafa1020a5838f38c67b09a6eeed4ad005798843",
+      "size": 733232
     },
     "apps/RemotePilotUpdater.cia": {
-      "sha256": "41c0fc6015dde4808a189f42a54ce78d64abb983facf953944e66301d32d29ff",
+      "sha256": "e859548b6dd1001e5eef3b70cb9465b36d713be45d325eef13489ec10a6a4e93",
       "size": 524736
     },
     "apps/RemotePilotUpdater.smdh": {
@@ -42,11 +42,11 @@
       "size": 14016
     },
     "apps/SHA256SUMS.txt": {
-      "sha256": "24c9e3e6e545c1756b231d2425583e242c70fca41dff9f1454a891a4dbbb3bab",
+      "sha256": "ea7f3e3d18aef394bd67b034259fa4eb706654d76fb94d75e6adeea61ca07e26",
       "size": 547
     },
     "apps/verification.json": {
-      "sha256": "9a00bf70430a3c063dab6b26de9acb48e5537d9c8de6b07e45a66d03347d2dee",
+      "sha256": "cbbbd4c9ebc791c0b610718bed07b6d0a3d1d370abe22332cf4fe0d3c5bfb053",
       "size": 1390
     },
     "build_bundle.py": {
@@ -70,16 +70,16 @@
       "size": 1728
     },
     "companion/NOTICE.md": {
-      "sha256": "3860f48617d5893d146ac7f2bf9cd87890adbf77897a33e8129ae9595bb5fa65",
-      "size": 2581
+      "sha256": "9ec346fd6ea1fd8d1f9a019c5e60ec2c3b5076549a4711c1fe21c8b452b73653",
+      "size": 2590
     },
     "companion/PROTOCOL.md": {
       "sha256": "4f2da0a21a08662540010cf98e10ec715220eafa1e48c7864c4e87dd219606c0",
       "size": 10136
     },
     "companion/README.md": {
-      "sha256": "643be9b5a10e49d769fea2695edfd1642ce2e4f9d9b1f8ad0a6459d84b296fad",
-      "size": 9396
+      "sha256": "b62ae1dee6e1e038f2544f215fcf38a91be4b4e87b0c4785f09dc62b10cfd9ba",
+      "size": 9538
     },
     "companion/Stage-Companion.ps1": {
       "sha256": "6a9188d1a351666df3499363ace98ff8e0de8f59698ad229b58448d91a9d679e",
@@ -110,19 +110,19 @@
       "size": 2340173
     },
     "companion/build.ps1": {
-      "sha256": "bcc65789c30c032bf0fb0b7752a935f9f91f7a98d2f9aacca98e91c9d34540f3",
-      "size": 5414
+      "sha256": "fd1b2a8c000c73b4e9bbf4364feb418add3242e9875003c776d121dbbf3b2b31",
+      "size": 5782
     },
     "companion/companion.rsf": {
       "sha256": "580bd118736902b15cd39499ccbecea102d35c5255dfc7729685291e6e8035e7",
       "size": 2785
     },
     "companion/make_assets.py": {
-      "sha256": "9aa9c9f9818615965876a804bc9763ab59a45faf6c08a6059d2e40037ecf6761",
+      "sha256": "d56f670779e5c488bb002ba8c3e9ee4da5165343f948b95ecfa5e47a66d929d6",
       "size": 1866
     },
     "companion/package_build.py": {
-      "sha256": "d22c11f07ae15d71b9f67b6bc1906c6dbc08b4e90c8954282f3dec31ffff18d9",
+      "sha256": "091a3367320fff2c07842a3999cbe0475392462a2b35bf941831ac21ddf6ff24",
       "size": 6513
     },
     "companion/source/data_transfer.hpp": {
@@ -134,8 +134,8 @@
       "size": 5941
     },
     "companion/source/main.cpp": {
-      "sha256": "0e185c810868d04a9a75fb462751d96c79dd95e4b512ebdf7bcca29d11dab9bb",
-      "size": 28998
+      "sha256": "816575d7da06de3106b4581acb5ce9a62454c1f60e5e9339baefa3cc78066ffa",
+      "size": 29084
     },
     "companion/source/platform.cpp": {
       "sha256": "d1fb1f4818debb38e6bc6b24c489f9dd270fa0bc08bb40c622fa0099dd888aa5",
@@ -157,6 +157,10 @@
       "sha256": "c913f1bb2ee957dbc7218dbfde9fe1bd991f296c0c86d23aafad95f9826654d8",
       "size": 743
     },
+    "companion/source/socket_io.hpp": {
+      "sha256": "3de49d681a1a0dcfcb7aea2b8fa3dbefcbf3a7bc53cee0827f98ef22a6f8b6e0",
+      "size": 812
+    },
     "companion/tests/3ds.h": {
       "sha256": "873016d3deeb021ab6ce63dbd669870b7ffbf655ad9064be606a0afcf7506142",
       "size": 2274
@@ -172,6 +176,10 @@
     "companion/tests/screen_banner_bin.h": {
       "sha256": "bec3dfd134f9ad464ff07d45b03477b2426c7efe7df20fbc3d839497eea0749d",
       "size": 110
+    },
+    "companion/tests/socket_io_test.cpp": {
+      "sha256": "c8b38f81dcf35eae34659e0073689cf06b2f22a95669bf3c81a0c90d56807a54",
+      "size": 1333
     },
     "companion/third_party/GCC-RUNTIME-EXCEPTION.txt": {
       "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
@@ -202,20 +210,20 @@
       "size": 2517
     },
     "docs/LEGAL_REVIEW.md": {
-      "sha256": "42120ec3396408f9aae1a5b98290cf132bc3316dfd1b5afc148b39d4137c8c33",
-      "size": 4467
+      "sha256": "470121c5f1fed43ab251eae61bd32613969ecefbb7ee5746de58881ec0966df2",
+      "size": 5486
     },
     "docs/RELEASE_NOTES.md": {
-      "sha256": "fad2f64cab6ef2aee1fbd199ad1d43734b89c95a5d653a171a197261f8eb3048",
-      "size": 2776
+      "sha256": "a9b7a5462ff0d340248ca959cea82a99c8406e02385483ddb17198cd170cbc6e",
+      "size": 4271
     },
     "docs/SECURITY_AUDIT.md": {
-      "sha256": "2f1b9e441315fdc0c8fbc8ddbf795e64f01426b86c88c8f8b9a3a3a007ad9719",
-      "size": 9005
+      "sha256": "a653e80bcd1456b1cb811a844ad7e40bbb373f392fa6da0485e94934b0e2b11c",
+      "size": 11946
     },
     "docs/SETUP.md": {
-      "sha256": "d218033eebb73faa2791aa125d7ced76ad0954f052afd359da5f4081914fb4f8",
-      "size": 3254
+      "sha256": "6a0579ef859814acac73df825f1fd9f5a85b5b8681cff979ef1db043f01e7229",
+      "size": 3708
     },
     "pc/ADAPTER_API.md": {
       "sha256": "08fb6cfb0e61b2a13939ce352278aad9b08af19dc4591a0c062968b52475129c",
@@ -342,8 +350,8 @@
       "size": 6738
     },
     "pc/test_homebrew_diagnostics.py": {
-      "sha256": "62eab4a016b07650641407d32a381b2f478d1aa32157530128daed86539ab446",
-      "size": 7426
+      "sha256": "7dac06cc3745f4febe4fe4576ebebff0cef97d677b1e0f81a36e4a4923560258",
+      "size": 8057
     },
     "pc/test_homebrew_flow.js": {
       "sha256": "b0353d1ac91e331b26021fc4ea35685e3bbdad5e8d012048394e6d66cd7f27fa",
@@ -374,25 +382,25 @@
       "size": 69178
     },
     "tools/build_host_tests.py": {
-      "sha256": "829f5409d0aa371a089d0d4e5e3af4b8c84f9ecc1c5f013cd03ef80694dab43c",
-      "size": 1565
+      "sha256": "bb55ac083824ab3d39a5fe1e05bf7f5b2e47e468dd985d65093aab057552a9e3",
+      "size": 1781
     },
     "tools/smoke_bundle.py": {
-      "sha256": "bdc7b7c03f518868945fbf6a208d46827979309e4eee9c3b43a7ebe2ea90fe3f",
+      "sha256": "481c619d6d73a649cfc5653c3786534337f3666ebd1d6341b7c334be7f8185b1",
       "size": 4633
     },
     "tools/verify_release.py": {
-      "sha256": "49164af6dcbaa1e3dfdd9ee2a44108e716b1d1f3797693b8cd2b4437d9e9f50d",
-      "size": 4157
+      "sha256": "4ff4fa4f38020c3817f82181981fb109b462df58e70293f61214f8cbc5662f77",
+      "size": 4259
     }
   },
   "hardwareVerified": false,
-  "mainVersion": 11,
+  "mainVersion": 12,
   "mode": "public",
   "presets": [
     "example",
     "homebrew"
   ],
-  "updaterVersion": 10,
-  "version": "0.10.0-preview"
+  "updaterVersion": 11,
+  "version": "0.10.1-preview"
 }

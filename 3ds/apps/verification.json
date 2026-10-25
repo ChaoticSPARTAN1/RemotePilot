@@ -1,26 +1,26 @@
 {
-  "applicationVersion": "0.10.0-preview",
+  "applicationVersion": "0.10.1-preview",
   "hardwareVerified": false,
   "cia": {
     "titleId": "000400000f3d5200",
-    "version": 11,
+    "version": 12,
     "contentChecksPassed": true,
     "bootLogoSha256": "62a5a1f9091aefb46b52e31fbeca2fdba9a99fe2473237e21e35b8d2e5659dff"
   },
   "updater": {
     "titleId": "000400000f3d5300",
-    "version": 10,
+    "version": 11,
     "contentChecksPassed": true,
     "bootLogoSha256": "62a5a1f9091aefb46b52e31fbeca2fdba9a99fe2473237e21e35b8d2e5659dff"
   },
   "files": {
     "RemotePilotHomebrew.cia": {
-      "size": 533440,
-      "sha256": "aa3f01cbebf02dccec135a5d7f2d1d0c6885c81fe156c171118fbe1d6e84c44c"
+      "size": 533952,
+      "sha256": "72582b1bb0b43f2bf1f2540b3f79d08a40a1882f4d856825ce7f1fd1b0d1770d"
     },
     "RemotePilotHomebrew.3dsx": {
-      "size": 738832,
-      "sha256": "f8cb559a5557ddf20b8818c8856fa3f8d7f7ba9ea15eaeb5b5f5a5f5aa8cf06b"
+      "size": 739136,
+      "sha256": "837adabe29eaa0bcd25de3c84bb9cb45c6f4b2bd5b412bd79baf1a3219b7a0dc"
     },
     "RemotePilotHomebrew.smdh": {
       "size": 14016,
@@ -28,11 +28,11 @@
     },
     "RemotePilotUpdater.cia": {
       "size": 524736,
-      "sha256": "41c0fc6015dde4808a189f42a54ce78d64abb983facf953944e66301d32d29ff"
+      "sha256": "e859548b6dd1001e5eef3b70cb9465b36d713be45d325eef13489ec10a6a4e93"
     },
     "RemotePilotUpdater.3dsx": {
-      "size": 733364,
-      "sha256": "17f820b5be3e0486e90b42507fa24be41ad25531cfa9f2ac29e8867f0b8d0bee"
+      "size": 733232,
+      "sha256": "cc904805e33b19118c6a7186cafa1020a5838f38c67b09a6eeed4ad005798843"
     },
     "RemotePilotUpdater.smdh": {
       "size": 14016,
