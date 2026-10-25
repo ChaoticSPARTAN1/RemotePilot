@@ -121,3 +121,38 @@ inventory when connecting to an app, so FBI-installed versions are recognised.
 Mods, folders and save-file transfers are future work and are not advertised as
 supported capabilities. The main app accepts permitted SD base-application CIAs;
 the recovery updater remains restricted to the main companion.
+
+
+## Fast game data (main build 9)
+
+Only the main companion advertises `data-transfer` and `fastDataTransfer:true`.
+Recovery remains restricted to updating the main companion. No arbitrary remote
+file read, delete, shell command or archive extraction is exposed.
+
+`data-begin` has three ASCII lines: `<id32> <size> <sha256>`, a relative target
+root, and a relative file path. `data-status`, `data-end`, and `data-cancel` accept
+that file job ID (`data-status` also accepts an empty body). Status includes an
+exact identity/hash/target/path/size/offset receipt. Files are limited to 2 GiB
+minus one byte for console stdio compatibility. Paths are constrained to safe
+ASCII segments. Save folders, firmware/system roots, pairing folders,
+credentials and executable extensions are rejected. `3ds` targets must have the
+form `3ds/<app>/data`.
+
+`data-stream` is a normal authenticated RPH1 request with the body
+`<id32> <offset> <count>`, count at most 4 MiB. After a signed `phase:ready`
+response, each frame is a 64-character HMAC followed by up to 65536 bytes. The
+frame size is implicitly the lesser of 65536 and remaining window bytes.
+The HMAC message is `data:<nonce>:<job>:<offset>:<size>:<SHA256(frame)>`.
+The connection ends with a signed data-job receipt. Ten-second frame deadlines,
+physical B/X cancellation and bounded windows keep the transfer controllable.
+The PC never retries writes; after an interrupted acknowledgment it continues
+only if an authenticated exact receipt confirms the complete window offset.
+
+A new file is written exclusively to a unique `.rph-<id>.part`, flushed and
+reread for SHA-256 verification before rename. Existing files are rehashed:
+identical files are kept; different files stop the package without replacement.
+Cancelled/failed partial files stay on SD for inspection, outside the engine's
+normal filenames. Reboot does not resume a partial file. A new checked transfer
+can skip already committed matching files. Keep the game closed until complete.
+HMAC authenticates traffic; this existing LAN protocol does not encrypt it.
+The PC shows measured payload throughput separately from file verification.

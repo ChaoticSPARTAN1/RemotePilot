@@ -35,7 +35,7 @@ def verify(secrets_dir=None):
     spec=importlib.util.spec_from_file_location('release_protocol',ROOT/'pc/homebrew_protocol.py')
     protocol=importlib.util.module_from_spec(spec);spec.loader.exec_module(protocol)
     verification=json.loads((ROOT/'apps/verification.json').read_text(encoding='utf-8'))
-    for stem,title,version in (('RemotePilotHomebrew','000400000f3d5200',8),('RemotePilotUpdater','000400000f3d5300',7)):
+    for stem,title,version in (('RemotePilotHomebrew','000400000f3d5200',10),('RemotePilotUpdater','000400000f3d5300',9)):
         info=protocol.cia_info(ROOT/'apps'/(stem+'.cia'))
         if info['titleId']!=title or info['version']!=version:raise ValueError('CIA identity/version mismatch')
         for suffix in ('.cia','.3dsx','.smdh'):

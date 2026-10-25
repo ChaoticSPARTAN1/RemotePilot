@@ -20,6 +20,7 @@ CHUNK = 65536
 TITLE = re.compile(r"00040000[0-9a-f]{8}\Z")
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 ACTIONS = {"status", "titles", "begin", "chunk", "verify", "install", "cancel", "launch", "job"}
+ACTIONS.update({'data-begin', 'data-status', 'data-end', 'data-cancel'})
 
 
 class CompanionRejected(ValueError):
@@ -124,7 +125,7 @@ class CompanionClient:
         with self._io_lock:
             # Only reads may retry. Mutations are sent exactly once, then their
             # exact job receipt may be inspected by the deployment worker.
-            read_only = action in ('status','titles','job')
+            read_only = action in ('status','titles','job','data-status')
             deadline = time.monotonic() + 6
             for attempt in range(12 if read_only else 1):
                 try:
@@ -183,3 +184,55 @@ class CompanionClient:
             raise CompanionInterrupted(f"Companion connection interrupted ({stage}, {type(exc).__name__}); inspect job before retrying") from None
         except (UnicodeError, json.JSONDecodeError):
             raise ValueError("Companion returned an invalid response; inspect job before retrying") from None
+
+    def data_stream(self, job, offset, source, count):
+        """One authenticated connection for up to 4 MiB; never retry a write."""
+        if not isinstance(job, str) or not re.fullmatch(r'[0-9a-f]{32}', job) or \
+                type(offset) is not int or offset < 0 or type(count) is not int or not 0 < count <= 4 * 1024 * 1024:
+            raise ValueError('Invalid fast data window')
+        with self._io_lock:
+            try:
+                with socket.create_connection((self.host, self.port), timeout=2) as conn:
+                    conn.settimeout(15)
+                    conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                    hello = line(conn).split(' ')
+                    if len(hello) != 4 or hello[:2] != ['RPH1', 'CHALLENGE'] or not HEX.fullmatch(hello[2]) or \
+                            not hmac.compare_digest(hello[3], mac(self.token, 'server:' + hello[2])):
+                        raise ValueError('Fast data pairing proof failed')
+                    nonce, ident = hello[2], secrets.token_hex(8)
+                    body = f'{job} {offset} {count}'.encode('ascii')
+                    checksum = hashlib.sha256(body).hexdigest()
+                    proof = mac(self.token, f'request:{nonce}:{ident}:data-stream:{len(body)}:{checksum}')
+                    conn.sendall(f'RPH1 {ident} data-stream {len(body)} {checksum} {proof}\n'.encode() + body)
+
+                    def reply():
+                        header = line(conn).split(' ')
+                        if len(header) != 5 or header[:2] != ['RPH1', ident] or not header[2].isdigit() or \
+                                not HEX.fullmatch(header[3]) or int(header[2]) > 262144 or \
+                                not hmac.compare_digest(header[4], mac(self.token, f'response:{nonce}:{ident}:{header[2]}:{header[3]}')):
+                            raise ValueError('Invalid fast data acknowledgement')
+                        raw = exact(conn, int(header[2]))
+                        if not hmac.compare_digest(hashlib.sha256(raw).hexdigest(), header[3]):
+                            raise ValueError('Fast data response checksum failed')
+                        value = json.loads(raw)
+                        if not isinstance(value, dict) or value.get('ok') is not True:
+                            raise CompanionRejected('Fast data request declined; inspect console status')
+                        return value
+
+                    if reply().get('phase') != 'ready':
+                        raise ValueError('Console did not accept fast data window')
+                    sent = 0
+                    while sent < count:
+                        block = source.read(min(CHUNK, count - sent))
+                        if not block or len(block) > count - sent:
+                            raise ValueError('Local data file ended early')
+                        digest = hashlib.sha256(block).hexdigest()
+                        proof = mac(self.token, f'data:{nonce}:{job}:{offset + sent}:{len(block)}:{digest}')
+                        conn.sendall(proof.encode('ascii') + block)
+                        sent += len(block)
+                    conn.shutdown(socket.SHUT_WR)
+                    return reply()
+            except OSError as exc:
+                raise CompanionInterrupted(f'Fast data transport interrupted ({type(exc).__name__}); inspect exact offset') from None
+            except (UnicodeError, json.JSONDecodeError):
+                raise ValueError('Invalid fast data response') from None

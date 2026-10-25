@@ -6,7 +6,7 @@ general RemotePilot application. Start with [SETUP](docs/SETUP.md).
 | Directory | Contents |
 | --- | --- |
 | `pc/` | Independent MIT PC tool, themed web UI and included presets |
-| `apps/` | Main companion build **8**, recovery updater build **7**, 3DSX/SMDH files, SHA-256 receipts and matching GPL source archive |
+| `apps/` | Main companion build **10**, recovery updater build **9**, 3DSX/SMDH files, SHA-256 receipts and matching GPL source archive |
 | `companion/` | GPL-3.0-only native source, original artwork, build scripts, tests and third-party source/notices |
 | `docs/` | Setup, security audit, preliminary distribution/license review and release notes |
 | `tools/` | Release verification, desktop test compilation and extracted-bundle checks |
@@ -31,3 +31,21 @@ console; the 8/7 audit builds add receipt recovery hardening and omit third-part
 boot-logo data. Their new native binaries have desktop simulation and graphics
 coverage, but a fresh physical installation/boot test remains pending. See the
 [audit's scope and remaining limits](docs/SECURITY_AUDIT.md).
+
+
+## Fast game data and launch repair (0.9.1-preview)
+
+Main build 10 and Recovery build 9 retain the existing aircraft/shield HOME
+icons, banners and app palettes. They add a generic homebrew system boot-logo
+section and defer app switching until normal libctru cleanup. The earlier
+no-logo Recovery build produced an owner-reported ErrDisp; physical boot testing
+of this repair remains pending. Installation checks alone do not prove boot.
+
+Game assets use a separate **Game assets** panel in the PC tool. Register a
+locally owned data directory with `python register_data.py <folder> --target
+<game/data> --name <name>` on one command line, then select that package.
+Fast authenticated 4 MiB windows are enabled by default, with 64 KiB checked
+frames, SD readback hashing, existing-file protection and physical cancellation.
+New-model CPU/cache boost is requested by the main app. Files are limited to
+2 GiB minus one byte, packages to 64 GiB/8192 files. Recovery remains app-only.
+See [GAME_DATA](docs/GAME_DATA.md) for setup and limits.

@@ -48,6 +48,10 @@ struct Job {
     uint64_t size=0, done=0; unsigned version=0;
     bool autonomous=false, reviewed=false;
 } job;
+static bool dataBusy();
+static void dataStep();
+static std::string dataDispatch(const std::string&,const std::string&);
+static std::string dataStatus();
 
 static bool hex(const std::string& s, size_t n) {
     return s.size()==n && s.find_first_not_of("0123456789abcdef")==std::string::npos;
@@ -106,7 +110,7 @@ static bool idleView() {
     return job.state=="idle"||job.state=="cancelled"||
         ((job.state=="failed"||job.state=="installed")&&job.reviewed);
 }
-static bool busy() { return job.state=="uploading"||job.state=="verifying"||job.state=="rechecking"||
+static bool busy() { return dataBusy()||job.state=="uploading"||job.state=="verifying"||job.state=="rechecking"||
     job.state=="awaiting-approval"||job.state=="installing"; }
 static std::string error(const std::string& s) { return "{\"ok\":false,\"error\":\""+s+"\"}"; }
 static std::string success() { return "{\"ok\":true,\"job\":"+jobJson()+"}"; }
@@ -170,13 +174,14 @@ static void step() {
     }
 }
 static std::string dispatch(const std::string& action,const std::string& body) {
+    if(action.compare(0,5,"data-")==0)return dataDispatch(action,body);
     if(action=="status")return "{\"ok\":true,\"protocol\":1,\"resident\":false,\"armed\":"+
         std::string(armed?"true":"false")+",\"applicationTitleId\":\""+idText(OwnId)+
         "\",\"buildVersion\":"+std::to_string(RPH_BUILD_VERSION)+",\"updater\":"+(Updater?"true":"false")+
         ",\"readyForTransfer\":"+(armed&&idleView()?"true":"false")+
         ",\"autonomousSupported\":true,\"autonomousEnabled\":"+(armed&&autonomous?"true":"false")+
         ",\"updateTarget\":\""+(Updater?idText(CompanionId):std::string())+
-        "\",\"capabilities\":[\"upload\",\"install\",\"titles\",\"launch\"],\"job\":"+jobJson()+"}";
+        "\",\"capabilities\":[\"upload\",\"install\",\"titles\",\"launch\""+std::string(Updater?"":",\"data-transfer\"")+"],\"fastDataTransfer\":"+(Updater?"false":"true")+",\"freeBytes\":"+std::to_string(platform::freeSpace())+",\"dataJob\":"+dataStatus()+",\"job\":"+jobJson()+"}";
     if(action=="titles") {
         if(!body.empty())return error("unexpected-body");
         std::vector<Title> titles;if(!inventory(titles))return error("inventory-failed");
@@ -277,6 +282,13 @@ static bool readLine(int s,std::string& line) {
         if(c<32||c>126)return false;
         line+=c;}return false;
 }
+#include "data_transfer.hpp"
+static std::string reply(int s,const std::string& nonce,const std::string& id,const std::string& result) {
+    std::string digest=sha256::ofString(result);
+    std::string message="response:"+nonce+":"+id+":"+std::to_string(result.size())+":"+digest;
+    socketDeadline=platform::milliseconds()+10000;
+    return sendAll(s,"RPH1 "+id+" "+std::to_string(result.size())+" "+digest+" "+hmac(message)+"\n"+result)?result:std::string();
+}
 static void session(int s) {
     socketDeadline=platform::milliseconds()+4000;
     int noDelay=1;setsockopt(s,IPPROTO_TCP,TCP_NODELAY,&noDelay,sizeof(noDelay));
@@ -292,6 +304,12 @@ static void session(int s) {
     std::string message="request:"+nonce+":"+id+":"+action+":"+std::to_string(length)+":"+digest;
     if(!equal(proof,hmac(message)))return;
     std::string body;if(!readExact(s,body,length)||sha256::ofString(body)!=digest)return;
+    if(action=="data-stream") {
+        uint64_t count=0;
+        if(!game_data::streamReady(body,count)){reply(s,nonce,id,error("invalid-data-stream"));return;}
+        if(reply(s,nonce,id,"{\"ok\":true,\"phase\":\"ready\"}").empty())return;
+        reply(s,nonce,id,game_data::stream(s,nonce,count));shutdown(s,SHUT_WR);return;
+    }
     std::string result=dispatch(action,body);digest=sha256::ofString(result);
     message="response:"+nonce+":"+id+":"+std::to_string(result.size())+":"+digest;
     // SD flush/receipt work may consume the request's socket deadline. Give the
@@ -375,6 +393,7 @@ int main(int argc,char** argv) {
         if(keys&4) {
             armed=!armed;armedAt=platform::milliseconds();
             if(!armed)autonomous=false;
+            if(!armed&&dataBusy())dataDispatch("data-cancel",game_data::data.id);
             if(!armed&&busy())dispatch("cancel",job.id);
         }
         if(armed&&platform::milliseconds()-armedAt>15*60*1000ULL) {
@@ -394,12 +413,13 @@ int main(int argc,char** argv) {
             }
         }
         if((keys&1)&&job.state=="awaiting-approval")startHash("installing");
+        if((keys&2)&&dataBusy())dataDispatch("data-cancel",game_data::data.id);
         if(keys&2) {
             if(job.state=="unknown") {job.state="failed";job.error="owner-reviewed-unknown-outcome";job.reviewed=true;if(!receipt())fail("receipt-write-failed");}
             else if(busy()||job.state=="verified")dispatch("cancel",job.id);
             else if(job.state=="failed"||job.state=="installed") {job.reviewed=true;if(!receipt())fail("receipt-write-failed");}
         }
-        step();
+        step();dataStep();
         if(listener>=0) {
             fd_set read;FD_ZERO(&read);FD_SET(listener,&read);timeval wait{0,0};
             if(select(listener+1,&read,nullptr,nullptr,&wait)>0) {
@@ -461,9 +481,18 @@ int main(int argc,char** argv) {
                 ui.instruction="Not listening. Check pairing and setup on the PC.";
                 ui.next="Next: finish setup before sending files.";
             }
+            if(dataBusy()) {
+                ui.active=true;ui.done=game_data::data.done;ui.total=game_data::data.total;
+                ui.target=game_data::data.path;ui.hash=game_data::data.hash;
+                ui.phase=game_data::data.state=="checking"?"CHECKING GAME DATA":"FAST GAME DATA";
+                ui.prompt=platform::UserPrompt::none;
+                ui.instruction="Keep this app and the lid open. B stops this file.";
+                ui.next="Matching existing files are kept. Different files are never replaced.";
+            }
             platform::dashboard(ui);
         }
     }
+    if(dataBusy())dataDispatch("data-cancel",game_data::data.id);
     if(job.state=="installing"){platform::cancelInstall();fail("application-closed-during-install","unknown");}
     else if(busy())fail("application-closed","cancelled");
     closeFile();if(listener>=0)close(listener);platform::exit();return 0;

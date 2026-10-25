@@ -1,3 +1,17 @@
+# 0.9.1-preview - 2026-10-25
+
+Main raw title version 10; Recovery version 9. Same title IDs and original HOME
+artwork. Hardware boot confirmation is pending after the reported Recovery v8
+launch failure. Main 9 was not installed on that console.
+
+- Generic registered game-data packages and default fast 4 MiB transport.
+- Checked file commits, existing-file protection, cancellation and measured speed.
+- Main app requests supported New-model CPU/cache boost.
+- Compatible generic homebrew boot-logo section and deferred app handoff cleanup.
+- Native CIA content/section checks block the former missing-logo package.
+- New 8-case data regression suite; 51 combined desktop tests passed.
+- Both apps and matching GPL source ship together; original logos retained.
+
 # 3DS 0.8.0 preview
 
 - Main companion raw title version **8**; recovery updater raw version **7**.

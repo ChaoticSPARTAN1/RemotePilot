@@ -1,5 +1,5 @@
 {
-  "archive": "RemotePilot-3DS-public-0.8.0-preview.zip",
+  "archive": "RemotePilot-3DS-public-0.9.1-preview.zip",
   "files": {
     ".gitattributes": {
       "sha256": "8b1b81c43c4dd991c2ad3858cfe88bc15dc5453172f0abf610f8f63e5f612170",
@@ -10,44 +10,44 @@
       "size": 110
     },
     "README.md": {
-      "sha256": "7c4cddae49689575b098b7d70ec5bb0793e3d46cb2786af59b54b4de360b561e",
-      "size": 1971
+      "sha256": "b8aad6d282c33136c10af3f3d855c03309df85c7b6c7610971ac0d28f0c7d0b4",
+      "size": 3064
     },
     "apps/RemotePilotHomebrew-source.zip": {
-      "sha256": "1c22e9c6afaebf8ad6d784b86a8b46a1a3934161fd5c60e4b6bb3ae2273a1fbb",
-      "size": 9261412
+      "sha256": "9bcc882e280542002323b251ca2be09ced31b19517cbfd155fa264a6adff8990",
+      "size": 9269590
     },
     "apps/RemotePilotHomebrew.3dsx": {
-      "sha256": "d9db5db4f379213df3e3413357d9731574e6a1226701eb9d264e66de25cb6ce6",
-      "size": 721988
+      "sha256": "65c0120f175240974fffa06e71168a8505b645c77571033684209df1ddef1a54",
+      "size": 734696
     },
     "apps/RemotePilotHomebrew.cia": {
-      "sha256": "6d7c15bb9a05cba7c919c9e8728298b207e57925e0deec9daa1f6e5c358936ab",
-      "size": 512960
+      "sha256": "38e1cfdf3008a0a6056b327681842f1652dd722b39f315834da4b61e60271b66",
+      "size": 530368
     },
     "apps/RemotePilotHomebrew.smdh": {
       "sha256": "5bf759e87914abc523b1860d2e8a69593616999464dd8232832278952bb90445",
       "size": 14016
     },
     "apps/RemotePilotUpdater.3dsx": {
-      "sha256": "1f8f2a83ec8c4618fdc467e1fcbe2c32026ff168c34585ee747a849c51416a97",
-      "size": 722216
+      "sha256": "068227f901a1877616f7a088e7bc65de52a41a5a22f4f6494822ae749d69f8e2",
+      "size": 733264
     },
     "apps/RemotePilotUpdater.cia": {
-      "sha256": "d478cb56a44fe3d7f540f6286745a84f5c728336017e91903662a8163dda30ef",
-      "size": 509376
+      "sha256": "5dc78960cd2b8386aca80a2fc39a4f4fcce893a7dd7fb8795509dfc2743fbb9b",
+      "size": 524736
     },
     "apps/RemotePilotUpdater.smdh": {
       "sha256": "6acfafc35bf97e23ea16176b9f5530c936f008e4dc862f7a0fa9be93d00c118f",
       "size": 14016
     },
     "apps/SHA256SUMS.txt": {
-      "sha256": "048d1f052d3a6cc02a9fb8f831247a5cdc270fe6961092a40654c6a622897f2a",
+      "sha256": "6528e6abd4d4bb0324a99f0fca4f73d059da512f4de80bf52b140d94eb3f2d08",
       "size": 547
     },
     "apps/verification.json": {
-      "sha256": "c72dc56d947aedf78af8f62a59c208dd82c35f291c6445af4647df8ddccf6c26",
-      "size": 1137
+      "sha256": "4672011866ded193e38cc49d0dedf3473111cf2d493488f43e2c00ed80596e1d",
+      "size": 1388
     },
     "build_bundle.py": {
       "sha256": "f573a9180ccac562887269f9551031ba265a9e541c58f7d70d10a294a8cf8c27",
@@ -70,16 +70,16 @@
       "size": 1728
     },
     "companion/NOTICE.md": {
-      "sha256": "1031d4a65ee61bc21939648f382448df8b13ee5c776cf54b219e232453db1021",
-      "size": 2151
+      "sha256": "3860f48617d5893d146ac7f2bf9cd87890adbf77897a33e8129ae9595bb5fa65",
+      "size": 2581
     },
     "companion/PROTOCOL.md": {
-      "sha256": "f9c5ce029321aedaf1db6be9626a7ced3d88c5e15b1f544866d1df99eb85b8bc",
-      "size": 7832
+      "sha256": "4f2da0a21a08662540010cf98e10ec715220eafa1e48c7864c4e87dd219606c0",
+      "size": 10136
     },
     "companion/README.md": {
-      "sha256": "028943e027ff58af7c13d913bc0a046386e6928ec209156bbf54bafe311a011c",
-      "size": 7204
+      "sha256": "643be9b5a10e49d769fea2695edfd1642ce2e4f9d9b1f8ad0a6459d84b296fad",
+      "size": 9396
     },
     "companion/Stage-Companion.ps1": {
       "sha256": "6a9188d1a351666df3499363ace98ff8e0de8f59698ad229b58448d91a9d679e",
@@ -110,28 +110,32 @@
       "size": 2340173
     },
     "companion/build.ps1": {
-      "sha256": "0cafbe5a35e5f59f91af21d6e5a1369c7686b8d7b1309133817482f252a6bcd4",
-      "size": 5412
+      "sha256": "4bb0707855720771666769d6d03d3bbf4d76ada59520069c0581696447fbe5d7",
+      "size": 5413
     },
     "companion/companion.rsf": {
-      "sha256": "7484606d3b0975f222fe5a10702a805f91c278af409d6ed87004a6ae4b00361d",
-      "size": 2781
+      "sha256": "580bd118736902b15cd39499ccbecea102d35c5255dfc7729685291e6e8035e7",
+      "size": 2785
     },
     "companion/make_assets.py": {
-      "sha256": "490e2dc8f4b87ea4870a4150c6c877a4f911338c97275d04385e272350d3148f",
-      "size": 1864
+      "sha256": "2f5a22bbf9346b9e3e2c2eb81d75e28b9e775dfb6c3724544517c0bc911d8e41",
+      "size": 1865
     },
     "companion/package_build.py": {
-      "sha256": "4ab93ba38311b7086e49d40fd5ee313cb14e10d0261203516de0f3c70bb27cda",
-      "size": 3997
+      "sha256": "04e9d5b085c14c9441bb9319ba3dd4beb4e6bb297fd7d61b56eb153020df844b",
+      "size": 6511
+    },
+    "companion/source/data_transfer.hpp": {
+      "sha256": "bc92c806c39b356391b80c71122e3d82782712f68230a1f604781683fb177d5a",
+      "size": 9866
     },
     "companion/source/main.cpp": {
-      "sha256": "156230c2e16c56136bbd9e47e3679a237708156b6cdff26101a18b8488685fe8",
-      "size": 26633
+      "sha256": "112e7bf7ab65191f7b3e74b6812c36df3323d7c8cb5ae1c1444a83ca454bd0eb",
+      "size": 28666
     },
     "companion/source/platform.cpp": {
-      "sha256": "f61384f22da92152c61760554a9d57c5b3f39ae52866eb3c00f5cad71d92b415",
-      "size": 12214
+      "sha256": "d1fb1f4818debb38e6bc6b24c489f9dd270fa0bc08bb40c622fa0099dd888aa5",
+      "size": 13003
     },
     "companion/source/platform.hpp": {
       "sha256": "600f5bdc0a901aed63dd6a0da83b910d6ec2c705e899d908f130ffce6a414343",
@@ -150,16 +154,16 @@
       "size": 743
     },
     "companion/tests/3ds.h": {
-      "sha256": "7d521e48111fcdb2fda1c78d96dc522d8b83fecc241ccaad911ce03e42781f76",
-      "size": 2167
+      "sha256": "873016d3deeb021ab6ce63dbd669870b7ffbf655ad9064be606a0afcf7506142",
+      "size": 2274
     },
     "companion/tests/libctru-default-font.bin": {
       "sha256": "1ad9ca560bc678159b52b97891c5c2c57647a131c49f9797e573ffb46d652fc9",
       "size": 2048
     },
     "companion/tests/platform_display_test.cpp": {
-      "sha256": "c879c11dc1f3887cf23ddfcc4334ca3375c3a34e7e499cf0d1e7ead905bfc301",
-      "size": 8726
+      "sha256": "a84d7bc924cef0aa1a3c45e6d88d05ac9deeefe28012629d87cc808a1e42c9b0",
+      "size": 9605
     },
     "companion/tests/screen_banner_bin.h": {
       "sha256": "bec3dfd134f9ad464ff07d45b03477b2426c7efe7df20fbc3d839497eea0749d",
@@ -168,6 +172,10 @@
     "companion/third_party/GCC-RUNTIME-EXCEPTION.txt": {
       "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
       "size": 3324
+    },
+    "companion/third_party/Project_CTR-MIT-LICENSE.txt": {
+      "sha256": "6e0183da4f7ae7b58aa838db92f565a99ce3b1d0bb31adcf06aa30291665cdd8",
+      "size": 1124
     },
     "companion/third_party/libctru-2.7.0-source.tar.gz": {
       "sha256": "c22913738ce3b1da5e52f26150d245f602c04f6c72cf4b81352f32c52d411e5f",
@@ -181,17 +189,21 @@
       "sha256": "9a59b4ee3af067045fe0ea78786201c42d54756fe48cbccf44f3dfc398474717",
       "size": 76870
     },
+    "docs/GAME_DATA.md": {
+      "sha256": "068f98bf8c10cebf525e3f6875e42ab74aa9bae3761edf640302245cfd999c50",
+      "size": 2517
+    },
     "docs/LEGAL_REVIEW.md": {
-      "sha256": "09e7a49ee54f938707cc6139b07c1f27e5d17aa32820ed5432a6d33d47fa0f1c",
-      "size": 3395
+      "sha256": "5cf5af490e70d3c0c399ee7b54fbb2bfb922756a139953e08e208d05ed5afe8c",
+      "size": 4116
     },
     "docs/RELEASE_NOTES.md": {
-      "sha256": "e587e79ba40984d2641ef57a7b34dd4a9dc05a36ffb9e1818967f933765114a8",
-      "size": 1412
+      "sha256": "d4eafd16aa934639bf930dc795d0dbb7d5a43b128ed871767d791b6795bf40b6",
+      "size": 2213
     },
     "docs/SECURITY_AUDIT.md": {
-      "sha256": "bdf7a9ba62f617e91825316b451bc6ff4b2f18f35855a6bd304fd624a3256f7b",
-      "size": 6057
+      "sha256": "860c55e2b33dda9a77940a8475fe82cf63bc996c62a32e526c19efa8b029b73e",
+      "size": 8162
     },
     "docs/SETUP.md": {
       "sha256": "d218033eebb73faa2791aa125d7ced76ad0954f052afd359da5f4081914fb4f8",
@@ -221,13 +233,21 @@
       "sha256": "e89bb73a5f1d95bd862f7d70669a1559fe63c4b3994d076062f643ff40f38465",
       "size": 3091
     },
+    "pc/data_transfer_ui.js": {
+      "sha256": "58f5296bed0bddc0427b1cbf7294f729b1b7ebb1bb2cd13eeef5794c1fc45ae6",
+      "size": 3360
+    },
     "pc/homebrew.js": {
-      "sha256": "4df0d7f93e151b946c5e0040f7e090c749f800e4c7c97777b85c4cc1afa2fa23",
-      "size": 24633
+      "sha256": "e3f25fd3ffc6e6f93ff145f85c3cbd4db14a8789c2a54dceedcaf792578120b8",
+      "size": 25064
     },
     "pc/homebrew_api.py": {
-      "sha256": "4c06863562132a7081a56586a1ccbfa9b5fb90d2afc5c6de81fed8e26c72ccc5",
-      "size": 721
+      "sha256": "4e83047126aa2469608aa2a68dc8fb9ddf6c37b924d406de16478cfeaeee91cd",
+      "size": 840
+    },
+    "pc/homebrew_data.py": {
+      "sha256": "870b992bdd6a649a426f02a164030db3e8d2bfc0580db595bec601f321a42899",
+      "size": 14252
     },
     "pc/homebrew_download.py": {
       "sha256": "7d2597d723c3b90c7bf01126d42bea8c658607c9fef6408863a4c770926c6c98",
@@ -238,12 +258,12 @@
       "size": 18516
     },
     "pc/homebrew_protocol.py": {
-      "sha256": "560395d0428c11132f8e3beef62c65006376ae6ebc6875afe803b31b078e49ff",
-      "size": 8499
+      "sha256": "9209f37e3ed78c1a41ef16e8890e25d658f23ab1344bc7ba026d7f893d02a256",
+      "size": 12111
     },
     "pc/homebrew_runtime.py": {
-      "sha256": "d6b9aca598914b9c8dd54bd852dc8e4adc9ca7df67454d91b331536d888d238d",
-      "size": 31186
+      "sha256": "807563b21af4829b6026b8f41ddc4c4b8f2e6f27c3453baac2f1a36d40b42389",
+      "size": 32149
     },
     "pc/legacy_transport.py": {
       "sha256": "45cd16e688063b4e9053756be2f9d13b50a584af1309a6a839ef6d8159da10b7",
@@ -262,8 +282,8 @@
       "size": 6615
     },
     "pc/presets.py": {
-      "sha256": "4921dfd9f9126f7db9f97edc00894dc6f0a701db7d78b8cbf02df0786fe9b267",
-      "size": 4969
+      "sha256": "e9ae12b83e9d70d271b28b7d037b1c5bf9d06850a3d2a73275ffdc6252aa4d05",
+      "size": 5079
     },
     "pc/presets/example/manifest.json": {
       "sha256": "91005350e41661de210f2f4de3effd8b38e54ee3c7dc70eb4a9e6bdb6b7f0d86",
@@ -274,12 +294,16 @@
       "size": 136
     },
     "pc/presets/homebrew/manifest.json": {
-      "sha256": "ca825771a7bbf4c5536d38e833a97e4d22ef9cccb2f049f59e6c587d7370b825",
-      "size": 452
+      "sha256": "ee491941c30951c924fae0d16e6c7412d132c46517f15372c484a16b6d20530d",
+      "size": 568
     },
     "pc/receiver.py": {
-      "sha256": "0731612e68bace8115b0aec17d06e7801bc66c87feedaead38ed4ca8318c744e",
-      "size": 87257
+      "sha256": "b15cafdef2bf4984a7810558700aedb73e3ef52fe77bc29db33013c8f4fd84e2",
+      "size": 89165
+    },
+    "pc/register_data.py": {
+      "sha256": "a91d62f26b667b5ada687cd40fbcd3c977dd3a49de363e68cc5130da13d73efb",
+      "size": 654
     },
     "pc/run.cmd": {
       "sha256": "7b7f5a524f9db7b6eed4725f7800b9454ff5ca1d746c91c298dc8d288ddfd363",
@@ -296,6 +320,10 @@
     "pc/test_homebrew.py": {
       "sha256": "bcbf6f67dd006b28a200fd4490f246eb53bfc19aa707cd974b79f2f686828825",
       "size": 47529
+    },
+    "pc/test_homebrew_data.py": {
+      "sha256": "4079b48f08b092428bcd58335ebc2b5e13f158a4dac34588e75501a60eeceff1",
+      "size": 6738
     },
     "pc/test_homebrew_flow.js": {
       "sha256": "b0353d1ac91e331b26021fc4ea35685e3bbdad5e8d012048394e6d66cd7f27fa",
@@ -318,33 +346,33 @@
       "size": 30825
     },
     "pc/viewer.html": {
-      "sha256": "35c168c802e2786abd1ae722e91737954cf3c8462272ef02f72f32a3478f60e8",
-      "size": 24049
+      "sha256": "a84747e4601ed43f936a09673b9f3f1942cc68bb81e6ee2b10fadd46e1f98384",
+      "size": 25000
     },
     "pc/viewer.js": {
       "sha256": "35981ef6d070afc9785d947ab0094cdde596e2f28fe7c866bc5ffd003de0326d",
       "size": 69178
     },
     "tools/build_host_tests.py": {
-      "sha256": "16c0e68bd07398838870fec5f933871f4a6a950550d52fcdea50d96f28325be0",
-      "size": 1537
+      "sha256": "4c5ce020736a2c9f0bdaf7f9c15fc8e264ae211a14ea69830f776adc6b3f7b49",
+      "size": 1564
     },
     "tools/smoke_bundle.py": {
-      "sha256": "4c047e46ea3a0f442d2c385a83f4b509c41598e71476bafa48a6c837cd101fb6",
-      "size": 4506
+      "sha256": "ab94aadb51217d511101b3d718252b54e66157346a878e00c8ff513296377fb9",
+      "size": 4612
     },
     "tools/verify_release.py": {
-      "sha256": "9041476ad1349cd12a64402021cfbaa328ec2affaf2aaf421db93ed7dc9e340a",
-      "size": 4096
+      "sha256": "703e73c2058a25e4382aca0e5daf5c5c320a1131f4dbbedf150ebd7685471202",
+      "size": 4156
     }
   },
   "hardwareVerified": false,
-  "mainVersion": 8,
+  "mainVersion": 10,
   "mode": "public",
   "presets": [
     "example",
     "homebrew"
   ],
-  "updaterVersion": 7,
-  "version": "0.8.0-preview"
+  "updaterVersion": 9,
+  "version": "0.9.1-preview"
 }

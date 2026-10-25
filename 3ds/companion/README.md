@@ -5,9 +5,9 @@ Wi-Fi CIA transfers, verified installation and application launch. Both have
 original HOME artwork and native dashboards: teal/silver for the main app,
 purple/gold for Recovery. Artwork sources are in `artwork/`.
 
-This release is **0.8.0-preview**, main raw title version **8** and Recovery
-version **7**. Earlier main 7 / Recovery 6 have owner-device installation and
-boot evidence. This exact 8/7 pair has passed desktop tests and compilation;
+This release is **0.9.1-preview**, main raw title version **10** and Recovery
+version **9**. Earlier main 7 / Recovery 6 have owner-device installation and
+boot evidence. This exact 10/9 pair has passed desktop tests and compilation;
 fresh physical installation/boot testing remains pending. Desktop AM services
 are simulated and cannot establish console behavior.
 
@@ -131,3 +131,38 @@ build scripts and pinned libctru source accompany the binaries. The PC program
 is independent and MIT licensed. Neither app is an official Nintendo product;
 compatibility names do not imply endorsement. See `../docs/LEGAL_REVIEW.md`
 for the preliminary distribution review.
+
+
+### Fast game-data packages
+
+Main build 9 adds registered game assets as a separate transfer from CIA apps.
+On the PC, run `python register_data.py <owned-data-folder> --target <game/data>
+--name <display-name>` (one line) from the PC tool directory. Registrations stay
+in private `local/homebrew/data-packages/`; browsers receive package IDs only.
+Select the package under **Game assets** and use **Transfer game data - Fast**.
+There is no extra fast-mode checkbox: 4 MiB authenticated windows are the default.
+The main app requests the supported New-model CPU/cache boost during its session.
+
+The PC shows measured payload MiB/s, file count and aggregate bytes. Each file is
+reread on SD for SHA-256 verification before becoming available to the game.
+Existing identical files are skipped; differing files stop without replacement.
+Save folders, firmware/system data, executables and credentials are excluded.
+Individual files are limited to 2 GiB minus one byte; packages to 64 GiB and
+8192 files. Separate CIA deployment retains its existing 512 MiB limit.
+
+Keep the game closed and both endpoints powered while transferring. Cancelled
+partial files are retained. A reboot does not resume a partial file; a new
+transfer can keep completed matching files. No commercial game data is included
+in this repository or release. Physical throughput remains to be measured on
+the user's console; desktop simulations do not establish Wi-Fi performance.
+
+
+### 0.9.1 launch repair
+
+The 9/8 audit packages omitted the application boot-logo section. The owner
+reported ErrDisp during Recovery launch; its cause is not confirmed by package
+hashes. This revision supplies makerom's generic Homebrew logo instead and uses
+libctru's exit-time chainloader so sockets, SD files and graphics are closed
+before switching applications. See the included Project_CTR MIT notice for
+packaging assets. Do not treat successful installation or an APT acknowledgment
+as proof the new application booted; confirm its authenticated identity/build.

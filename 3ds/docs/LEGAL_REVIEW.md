@@ -23,7 +23,7 @@ vary by jurisdiction; that broader question is not resolved by this review.
   and the [GCC Runtime Library Exception](https://www.gnu.org/licenses/gcc-exception-3.1.html)
   are reproduced for the toolchain runtimes. Build tools are downloaded separately
   from their pinned upstream releases, not redistributed as executables here.
-- Public audit builds omit the packaging tool's third-party boot-logo blob.
+- The repaired preview uses makerom's generic Homebrew boot-logo asset, with its Project_CTR MIT notice, instead of the Nintendo boot-logo asset.
   The HOME icons, HOME banners and in-app relay/shield imagery are original
   RemotePilot assets generated with AI assistance. They are supplied under the
   companion's license to the extent rights are held; no exclusive copyright or
@@ -47,3 +47,14 @@ downstream distributor may lawfully use or distribute a particular third-party C
 requires a separate assessment. Recheck notices and source matching whenever
 dependencies, assets or distribution methods change. For commercial deployment
 or disputed rights, obtain qualified legal advice.
+
+
+## 2026-10-25 additions
+
+The generic transfer code is original PC/native work under the existing MIT/GPL
+split. Original aircraft/shield artwork is retained byte-for-byte. The generic
+Homebrew boot-logo asset is selected from the pinned Project_CTR makerom 0.19.0
+release; its MIT notice accompanies the source and binaries. No commercial game
+CIA, Doom asset, save, owner path, network address or pairing secret is included.
+Owner assets are registered and used locally, independently of repository content.
+This content/provenance check does not certify downstream third-party packages.

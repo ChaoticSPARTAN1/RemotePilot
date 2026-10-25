@@ -1,5 +1,6 @@
 """Explicit homebrew-v1 action capabilities, separate from every game parser."""
 ACTION_CAPABILITIES = {
+    "data-start": "data-transfer", "data-cancel": "data-transfer", "data-review": "data-transfer",
     "status": "homebrew", "configure": "homebrew", "inspect": "homebrew",
     "download": "upload", "update": "upload", "cancel": "upload", "titles": "titles", "launch": "launch",
     "system-arm": "system-input", "system-input": "system-input", "system-release": "system-input",

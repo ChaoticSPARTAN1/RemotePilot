@@ -32,3 +32,10 @@ license. No exclusive copyright or third-party endorsement is claimed for AI out
 
 The RemotePilot PC client is independently implemented in the separate
 RemotePilot directory and does not import the companion's GPL source.
+
+
+The CIA packaging includes makerom v0.19.0's generic `Homebrew` boot-logo asset
+from 3DSGuy/Project_CTR (`makerom/src/ncch_logo.h`), rather than its Nintendo logo
+or an absent logo region. Project_CTR's MIT license is included in
+`third_party/Project_CTR-MIT-LICENSE.txt`. The asset is not an affiliation claim.
+Source: https://github.com/3DSGuy/Project_CTR/tree/makerom-v0.19.0/makerom

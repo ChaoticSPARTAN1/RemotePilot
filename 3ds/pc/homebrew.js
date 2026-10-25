@@ -181,6 +181,7 @@
       row.append(label, launch); return row;
     });
     el('hb-title-list').replaceChildren(...titles);
+    window.RemotePilotGameData?.render(snapshot);
     const handoff = snapshot.handoff;
     el('hb-handoff-state').textContent = handoff ? `${handoff.state}: ${handoff.detail}` : '';
   }
@@ -337,5 +338,6 @@
   document.addEventListener('visibilitychange', () => { if (!focused() && el('hb-system-arm').checked) run(disarm); });
   window.addEventListener('pagehide', () => { fetch('/api/homebrew/system-release', {method: 'POST', keepalive: true,
     headers: {'Content-Type': 'application/json', 'X-Remote-Pilot-Viewer': '1'}, body: '{}'}).catch(() => {}); });
+  window.RemotePilotGameData?.init();
   setInterval(lease, 500); setInterval(poll, 1000); poll();
 })();

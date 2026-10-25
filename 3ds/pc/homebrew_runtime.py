@@ -13,8 +13,9 @@ from urllib.parse import urlsplit
 from homebrew_protocol import CHUNK, HEX, MAX_CIA, CompanionClient, CompanionInterrupted, CompanionRejected, cia_info, private_host, title_id
 from luma_input import LumaInput
 from homebrew_download import PublicHTTPSHandler
+from homebrew_data import DataManager
 
-CAPS = {"upload", "install", "titles", "launch"}
+CAPS = {"upload", "install", "titles", "launch", "data-transfer"}
 COMPANION_TITLE = "000400000f3d5200"
 UPDATER_TITLE = "000400000f3d5300"
 TRANSFER_CHUNK = 16 * 1024  # shorter stop-and-wait writes also support the original bootstrap
@@ -57,6 +58,7 @@ class HomebrewAdapter:
         except (OSError, ValueError, TypeError, KeyError):
             pass
         self._load()
+        self.data = DataManager(self)
 
     def set_active(self, callback):
         self.active = callback
@@ -69,7 +71,7 @@ class HomebrewAdapter:
     def configure(self, device_host, port=38765):
         host = private_host(device_host)
         with self.lock:
-            if any(j["state"] not in TERMINAL for j in self.jobs.values()):
+            if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                 raise ValueError("Finish or cancel the active job before changing pairing")
             token = secrets.token_hex(32)
             if self.config_path.exists():
@@ -168,6 +170,7 @@ class HomebrewAdapter:
                     "autonomousEnabled": self.connected and self.remote.get('armed') is True and self.remote.get('autonomousEnabled') is True,
                     "system": self.system.status(),
                     "handoff": dict(self.handoff) if self.handoff else None,
+                    "dataTransfer": self.data.snapshot(),
                     "screenStreaming": False, "audioStreaming": False, "twl": False}
 
     def _require(self, cap):
@@ -192,6 +195,8 @@ class HomebrewAdapter:
     def new_job(self, expected_hash, expected_title, install=False):
         self._require("upload")
         self._require_armed()
+        if self.data.busy():
+            raise ValueError("Finish game-data transfer before sending an installer")
         if self.remote.get('job', {}).get('state') == 'unknown':
             raise ValueError('Review the previous console outcome before starting another deployment')
         if not isinstance(expected_hash, str) or not HEX.fullmatch(expected_hash) or type(install) is not bool:
@@ -416,6 +421,8 @@ class HomebrewAdapter:
         raise ValueError("Job timeout waiting for progress or approval; inspect console status; no automatic retry")
 
     def homebrew_request(self, action, data):
+        if action.startswith("data-"):
+            return self.data.request(action, data)
         if action == "status":
             return self.snapshot()
         if action == "configure":
@@ -476,7 +483,7 @@ class HomebrewAdapter:
             if title in (COMPANION_TITLE, UPDATER_TITLE) and data.get("preset"):
                 raise ValueError("Companion updates use the homebrew connection, without a game handoff")
             with self.lock:
-                if any(j["state"] not in TERMINAL for j in self.jobs.values()):
+                if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                     raise ValueError("Finish or cancel the deployment before launching")
             self.system.release()
             ident = secrets.token_hex(16)
@@ -507,7 +514,7 @@ class HomebrewAdapter:
                 self.system.release()
             elif data.get("enabled") is True and data.get("inputRedirectionEnabled") is True and self.client:
                 with self.lock:
-                    if any(j["state"] not in TERMINAL for j in self.jobs.values()):
+                    if self.data.busy() or any(j["state"] not in TERMINAL for j in self.jobs.values()):
                         raise ValueError("System input stays off during deployment and console approval")
                 self.system.arm(self.client.host, data.get("owner"), data.get("version"))
             else:

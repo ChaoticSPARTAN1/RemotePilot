@@ -36,3 +36,7 @@ Result FSFILE_Close(Handle); Result FSUSER_GetSdmcArchiveResource(FS_ArchiveReso
 Result AM_StartCiaInstall(int,Handle*); Result FSFILE_Write(Handle,u32*,u64,const void*,u32,int);
 Result AM_FinishCiaInstall(Handle); Result AM_CancelCIAInstall(Handle);
 Result APT_PrepareToDoApplicationJump(int,u64,int); Result APT_DoApplicationJump(void*,size_t,void*);
+
+void osSetSpeedupEnable(bool);
+
+void aptSetChainloader(u64,u8);

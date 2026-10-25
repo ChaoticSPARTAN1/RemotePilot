@@ -80,3 +80,32 @@ The final export scan compared each bundle against four actual local credential
 values without disclosing those values, in addition to private-key/token pattern
 checks. CI repeats manifest/source checks, desktop simulations, Node checks and
 extracted-bundle startup. CI has no console credentials or device access.
+
+
+## 2026-10-25 game-data and launch changes
+
+- Local CLI registrations are validated and private. HTTP accepts package IDs
+  only; the companion accepts constrained relative data paths and rejects saves,
+  system/firmware roots, credentials, executables, traversal and linked parents.
+- Windows batch authentication covers nonce, job, exact offset, frame size and
+  SHA-256. No writes retry automatically. Lost acknowledgments require an exact
+  authenticated full-window offset. No new authentication bypass or remote arm.
+- New files use exclusive unique temporary paths, flush/readback hashing and a
+  final rename. Different existing files never get replaced. Cancellation keeps
+  committed originals and partial files. Reboot does not resume unfinished data.
+- CIA uploads, launches, pairing changes and injected input are blocked during
+  data work. Recovery does not expose the data capability. Source/target limits
+  and per-file free-space checks bound operations.
+- New native packaging checks verify CIA content hashes, NCCH identity, extended
+  header, compatible boot-logo section and every ExeFS payload. The exact owner
+  Recovery v8 failed the new missing-logo gate. This is a packaging risk found,
+  not proof of the ErrDisp's cause. Read-only Windows FAT32 scan found no errors.
+- App switching now queues libctru's exit-time chainloader rather than jumping
+  during an active network callback. Production-platform regression checks that
+  preparation does not start the transition and launch exits the main loop.
+- ARM builds and 51 desktop protocol/install/data tests passed; graphics and
+  deferred-launch regression passed. New-model boost is requested by the main
+  app. Hardware boot/switch/throughput acceptance is still pending for 10/9.
+- The prepared owner's Doom pack was staged separately to an identified SD card,
+  with all 397 files verified and original saves/logs excluded. Those files and
+  all private staging reports are excluded from both distributions.

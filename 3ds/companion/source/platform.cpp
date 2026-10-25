@@ -17,7 +17,12 @@ static void* socBuffer;
 static Handle installHandle;
 static bool amReady, psReady, socReady;
 static PrintConsole top, bottom;
+static uint64_t pendingLaunchTitle=0;
+static bool launchOnExit=false;
 bool init() {
+#ifndef RPH_UPDATER
+    osSetSpeedupEnable(true); // New-model CPU/cache boost; ignored on original models.
+#endif
     gfxInit(GSP_RGB565_OES, GSP_RGB565_OES, false);
     consoleInit(GFX_TOP, &top); consoleInit(GFX_BOTTOM, &bottom);
     // consoleInit chooses single buffering and caches a framebuffer pointer.
@@ -38,7 +43,7 @@ void exit() {
     if (amReady) amExit();
     gfxExit();
 }
-bool running() { gspWaitForVBlank(); return aptMainLoop(); }
+bool running() { if(launchOnExit)return false; gspWaitForVBlank(); return aptMainLoop(); }
 uint64_t milliseconds() { return svcGetSystemTick() / (SYSCLOCK_ARM11 / 1000); }
 std::string networkAddress() { in_addr ip{}; ip.s_addr=gethostid(); return inet_ntoa(ip); }
 unsigned keys() {
@@ -92,10 +97,18 @@ bool cancelInstall() {
     Handle h=installHandle; installHandle=0;
     return !h || R_SUCCEEDED(AM_CancelCIAInstall(h));
 }
-bool prepareLaunch(uint64_t id) { return R_SUCCEEDED(APT_PrepareToDoApplicationJump(0, id, MEDIATYPE_SD)); }
+bool prepareLaunch(uint64_t id) {
+    // Validate the target without starting an APT transition during socket I/O.
+    AM_TitleInfo info{};
+    if(!amReady||R_FAILED(AM_GetTitleInfo(MEDIATYPE_SD,1,&id,&info))||info.titleID!=id)return false;
+    pendingLaunchTitle=id;return true;
+}
 bool launch() {
-    static u8 params[0x300]{}, hmac[0x20]{};
-    return R_SUCCEEDED(APT_DoApplicationJump(params, sizeof(params), hmac));
+    if(!pendingLaunchTitle)return false;
+    // libctru performs the actual jump at process exit, after our files,
+    // network services and graphics are closed. This follows app_launch.
+    aptSetChainloader(pendingLaunchTitle,MEDIATYPE_SD);
+    launchOnExit=true;return true;
 }
 static void largeText(const char* text,unsigned left,unsigned y,u16 color) {
     const auto& font=bottom.font;

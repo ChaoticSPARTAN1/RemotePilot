@@ -14,7 +14,7 @@ def main():
     env=os.environ.copy()
     env['PATH']=str(Path(compiler).parent)+os.pathsep+env.get('PATH','')
     common=[compiler,'-Wall','-Wextra','-Werror','-std=gnu++17','-O1','-g']
-    for folder,version,output,flags in (('build',8,'companion-host.exe',[]),('build-updater',7,'updater-host.exe',['-DRPH_UPDATER'])):
+    for folder,version,output,flags in (('build',10,'companion-host.exe',[]),('build-updater',9,'updater-host.exe',['-DRPH_UPDATER'])):
         (ROOT/folder).mkdir(exist_ok=True)
         (ROOT/folder/'build_version.hpp').write_text(f'#pragma once\n#define RPH_BUILD_VERSION {version}\n')
         subprocess.run(common+flags+['-I'+folder,'source/main.cpp','source/platform_host.cpp','source/sha256.cpp','-o','build/'+output],cwd=ROOT,env=env,check=True)

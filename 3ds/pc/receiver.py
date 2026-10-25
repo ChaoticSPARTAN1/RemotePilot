@@ -1273,6 +1273,7 @@ class Viewer(BaseHTTPRequestHandler):
             return
         paths = {"/": (HERE / "viewer.html", "text/html; charset=utf-8"),
                  "/homebrew.js": (HERE / "homebrew.js", "text/javascript; charset=utf-8"),
+                 "/data_transfer_ui.js": (HERE / "data_transfer_ui.js", "text/javascript; charset=utf-8"),
                  "/homebrew_flow.js": (HERE / "homebrew_flow.js", "text/javascript; charset=utf-8"),
                  "/viewer.js": (HERE / "viewer.js", "text/javascript; charset=utf-8"),
                  "/themes.css": (HERE / "themes.css", "text/css; charset=utf-8")}

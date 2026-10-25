@@ -17,6 +17,8 @@ static std::vector<u16> pixels[2][2];
 static unsigned current[2];
 static bool doubled[2];
 static unsigned waits=0, swaps=0, flushes=0;
+static bool chainloaderSet=false;
+static constexpr u64 launchTarget=0x000400000f3d5300ULL;
 static u8 testFont[256*8];
 static std::vector<u16> before[2];
 static size_t count(unsigned screen){return (screen==GFX_TOP?400:320)*240;}
@@ -52,7 +54,11 @@ void hidScanInput(){std::abort();} u32 hidKeysDown(){std::abort();}
 Result PS_GenerateRandomBytes(void*,size_t){std::abort();}
 Result AM_GetTitleCount(int,u32*){std::abort();}
 Result AM_GetTitleList(u32*,int,u32,u64*){std::abort();}
-Result AM_GetTitleInfo(int,u32,u64*,AM_TitleInfo*){std::abort();}
+Result AM_GetTitleInfo(int media,u32 count,u64* id,AM_TitleInfo* info){
+    assert(media==MEDIATYPE_SD&&count==1);
+    if(*id!=launchTarget)return -1;
+    *info={*id,9};return 0;
+}
 FS_Path fsMakePath(int,const char*){std::abort();}
 Result FSUSER_OpenFileDirectly(Handle*,int,FS_Path,FS_Path,int,int){std::abort();}
 Result AM_GetCiaFileInfo(int,AM_TitleInfo*,Handle){std::abort();}
@@ -137,6 +143,17 @@ int main(int argc,char** argv){
         ui.next=ui.recovery?"Only RemotePilot companion CIAs here.":"CIA apps now. Y: optional auto mode.";
         markVisible();platform::dashboard(ui);guards();ppm(std::string(argv[2])+"-ready.ppm");
     }
+    assert(!platform::launch());
+    assert(!platform::prepareLaunch(0));
+    assert(platform::prepareLaunch(launchTarget));
+    assert(!chainloaderSet); // Preparing must not begin an APT transition.
+    assert(platform::launch());
+    assert(chainloaderSet);
+    assert(!platform::running()); // Leave the main loop so cleanup runs first.
     platform::exit();
-    puts("Display regression: visible buffers untouched while drawing; both back buffers rebound; RGB565 artwork bounds and vblank presentation PASS");
+    puts("Display regression: visible buffers untouched while drawing; both back buffers rebound; RGB565 artwork bounds, vblank and deferred chainload PASS");
 }
+
+void osSetSpeedupEnable(bool enabled){assert(enabled);}
+
+void aptSetChainloader(u64 id,u8 media){assert(id==launchTarget&&media==MEDIATYPE_SD);chainloaderSet=true;}
