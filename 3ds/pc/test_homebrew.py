@@ -467,6 +467,21 @@ class CompanionTests(unittest.TestCase):
         (self.root / 'test-key').write_text(str(key))
         self.wait(lambda: not (self.root / 'test-key').exists())
 
+    def clock_offset(self, milliseconds):
+        # The simulated monotonic clock must never briefly read a truncated
+        # file as zero. Publish each complete offset atomically on every OS.
+        target=self.root/'test-clock-offset'
+        temporary=target.with_suffix('.tmp')
+        temporary.write_text(str(milliseconds))
+        deadline=time.monotonic()+2
+        while True:
+            try:
+                temporary.replace(target)
+                return
+            except PermissionError:
+                if time.monotonic()>=deadline:raise
+                time.sleep(.005)
+
     def upload(self, data, digest=None, autonomous=False):
         ident = secrets.token_hex(16)
         with tempfile.NamedTemporaryFile(dir=self.root, suffix='.cia', delete=False) as output:
@@ -615,7 +630,7 @@ class CompanionTests(unittest.TestCase):
         data=cia(2,content=140000);ident=secrets.token_hex(16)
         self.client.call('begin',f"{ident} {len(data)} {hashlib.sha256(data).hexdigest()} {TITLE} 2 autonomous".encode())
         for number,at in enumerate(range(0,len(data),CHUNK),1):
-            (self.root/'test-clock-offset').write_text(str(number*14*60*1000))
+            self.clock_offset(number*14*60*1000)
             self.client.call('chunk',f'{ident} {at}\n'.encode()+data[at:at+CHUNK])
         self.client.call('verify',ident.encode())
         self.wait(lambda:self.job(ident)['state']=='verified')
@@ -623,7 +638,7 @@ class CompanionTests(unittest.TestCase):
         self.assertTrue(self.client.call('status')['autonomousEnabled'])
         self.client.call('install',ident.encode())
         self.wait(lambda:self.job(ident)['state']=='installed')
-        (self.root/'test-clock-offset').write_text(str((number*14+16)*60*1000))
+        self.clock_offset((number*14+16)*60*1000)
         self.wait(lambda:not self.client.call('status')['armed'])
         self.assertFalse(self.client.call('status')['autonomousEnabled'])
 
