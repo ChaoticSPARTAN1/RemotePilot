@@ -1,0 +1,31 @@
+# The RemotePilot PSP companion EBOOT (platform_psp.c). Run from a build
+# folder with this file's folder as SRC (psp/tools/build_psp.py does):
+#   make -f <SRC>/Makefile.psp SRC=<SRC>
+SRC ?= .
+VPATH = $(SRC) $(SRC)/ui $(SRC)/third_party
+
+TARGET = remotepilot
+OBJS = platform_psp.o rp2_device.o rp2_actions.o rp2_backup.o rp2_restore.o sha256_hmac.o \
+	ui.o screens.o ui_fonts.o ui_backdrop.o
+
+INCDIR = $(SRC)
+CFLAGS = -O2 -G0 -std=gnu99 -Wall -Wextra -Werror -Wno-unused-parameter
+LIBDIR =
+LDFLAGS =
+# only what nothing else links: build.mak adds -lpspdebug -lpspdisplay
+# -lpspge -lpspctrl -lpspnet -lpspnet_apctl, and psp-gcc's specs add
+# -lpsputility -lpsprtc -lpspnet_inet after libc. A library named twice has
+# its stubs linked in two places, which psp-fixup-imports can't put in order
+LIBS = -lpsppower -lpspwlan -lm
+
+BUILD_PRX = 1
+PSP_FW_VERSION = 661
+
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = RemotePilot PSP
+# XMB art, ours: drawn by art/make_xmb_art.py
+PSP_EBOOT_ICON = $(SRC)/art/ICON0.PNG
+PSP_EBOOT_PIC1 = $(SRC)/art/PIC1.PNG
+
+PSPSDK = $(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Remote Pilot</title>
+  <link rel="stylesheet" href="/viewer.css">
+  <link rel="stylesheet" href="/device.css">
+  <link rel="stylesheet" href="/psp.css">
+  <script src="/viewer.js" defer></script>
+  <script src="/psp.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <div class="brand"><span class="mark" aria-hidden="true">R</span><div><p class="eyebrow">LOCAL DEVICE QA</p><h1>Remote Pilot</h1></div></div>
+    <label class="preset-picker">Preset <select id="preset" aria-label="Device preset"></select></label>
+    <button id="setup-open" class="quiet" type="button" hidden>Setup guide</button><span id="status" class="status" role="status">Starting viewer</span>
+    <div class="options"><button id="options-open" class="quiet" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="options-menu">Options</button>
+      <div id="options-menu" class="options-menu" role="menu" hidden>
+        <button id="bug-report" type="button" role="menuitem">Write a bug report…</button>
+        <button id="bug-bundle" type="button" role="menuitem">Save bug capture (screen + log)</button>
+        <p class="micro">Bug reports are saved on this computer only, in RemotePilot's private local folder. Nothing is sent to GitHub or anywhere else.</p>
+      </div></div>
+  </header>
+
+  <dialog id="bug-dialog" class="bug-dialog" aria-labelledby="bug-title">
+    <form id="bug-form" method="dialog">
+      <h2 id="bug-title">Write a bug report</h2>
+      <p class="micro">Saved on this computer only: nothing is sent anywhere. You decide what to do with the folder.</p>
+      <label for="bug-what">What happened</label><textarea id="bug-what" rows="3" maxlength="4000"></textarea>
+      <label for="bug-steps">Steps to reproduce</label><textarea id="bug-steps" rows="3" maxlength="4000"></textarea>
+      <label for="bug-expected">What you expected</label><textarea id="bug-expected" rows="2" maxlength="4000"></textarea>
+      <label class="enable"><input id="bug-include" type="checkbox" checked> Include the device's screen and log (when connected)</label>
+      <p id="bug-result" class="micro" role="status"></p>
+      <ul id="bug-saved" class="backup-list" aria-label="Bug reports on this computer"></ul>
+      <div class="action-row"><button id="bug-save" type="button">Save on this computer</button><button id="bug-close" class="secondary" type="button">Close</button></div>
+    </form>
+  </dialog>
+
+  <section id="psp-guide" class="panel psp-guide" hidden aria-labelledby="psp-guide-title">
+    <div class="guide-top">
+      <svg class="guide-emblem" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30"/><path d="M14 30a26 26 0 0 1 36 0M20 37a17 17 0 0 1 24 0M26 44a8 8 0 0 1 12 0"/><circle class="dot" cx="32" cy="50" r="3.2"/></svg>
+      <div><p class="eyebrow">PSP REMOTE LINK</p><h2 id="psp-guide-title">RemotePilot PSP</h2><p class="micro">Backup, restore and a live link to your PSP, over your own Wi-Fi.</p></div>
+      <span id="guide-badge" class="guide-badge"><i></i><b>Starting</b></span>
+    </div>
+    <h3 id="guide-title">Getting ready</h3>
+    <ol id="guide-steps" class="guide-steps"><li>Pair</li><li>Copy to card</li><li>Start on PSP</li><li>Connected</li></ol>
+    <div class="guide-grid">
+      <div class="guide-card"><p class="eyebrow">ON YOUR PSP</p><p id="guide-cue" class="guide-cue">—</p><p id="guide-psp" class="guide-text"></p></div>
+      <div class="guide-card"><p class="eyebrow">ON THIS PC</p><p id="guide-pc" class="guide-text"></p><div id="guide-actions" class="action-row"></div><p id="guide-status" class="micro" role="status"></p></div>
+    </div>
+    <p id="guide-next" class="guide-next"></p>
+  </section>
+
+  <section id="setup" class="panel setup" aria-labelledby="setup-title">
+    <div class="heading"><div><p class="eyebrow">FIRST RUN</p><h2 id="setup-title">Connect a homebrew build</h2></div><button id="setup-hide" class="quiet" type="button">Hide guide</button></div>
+    <ol>
+      <li><strong>Add a trusted preset.</strong> The Example preset works offline. An integrated homebrew build adds its own preset and adapter.</li>
+      <li><strong>Select that preset and prepare pairing.</strong> Remote Pilot generates the private device config when the adapter supports one-step setup.</li>
+      <li><strong>Copy the config to your device.</strong> The destination is specified by that build. Start the build and allow its local PC link.</li>
+    </ol>
+    <div class="setup-actions"><button id="prepare" type="button">Prepare pairing</button><button id="install-config" type="button" hidden>Copy to selected device folder</button><button id="download-config" type="button" hidden>Download device config</button><a href="/docs/INTEGRATION.md" id="integration-guide">Integration guide</a></div>
+    <div id="manual-host-row" class="setup-actions" hidden><label for="device-host">Device address if automatic search misses it</label><input id="device-host" type="text" inputmode="decimal" placeholder="Private device IPv4"><button id="use-device-host" class="secondary" type="button">Use address</button><button id="auto-device-host" class="secondary" type="button">Search automatically</button></div>
+    <p id="setup-result" class="muted" role="status">Select a device preset to begin. Example needs no pairing.</p>
+  </section>
+
+  <section class="connect-bar" aria-labelledby="connect-title">
+    <div><p class="eyebrow">DEVICE CONNECTION</p><h2 id="connect-title">Connect to your device</h2><p id="connection-detail" class="muted">Example runs locally.</p></div>
+    <div class="connect-actions"><button id="link" type="button">Pause PC link</button><button id="retry" class="secondary" type="button">Retry connection</button></div>
+  </section>
+
+  <div class="layout">
+    <section class="panel display-panel" aria-labelledby="display-title">
+      <div class="heading"><div><p class="eyebrow">DEVICE DISPLAY</p><h2 id="display-title">Live view</h2></div><span id="frame-info" class="muted">No frame yet</span></div>
+      <label id="model-picker" class="model-picker" for="device-model" hidden>Device view <select id="device-model"><option value="new">New 3D 2 Screen</option><option value="original">Original 3D 2 Screen</option><option value="psp">PSP</option><option value="generic">Generic frame</option></select></label>
+      <div id="display" class="display" tabindex="0" aria-label="Device preview">
+        <img id="frame" alt="Screen capture from the selected device" draggable="false" hidden>
+        <span id="placeholder">Example preview · choose an integrated preset for device frames</span>
+        <div id="psp-device" class="psp-device" hidden aria-label="PSP preview">
+          <div class="psp-shell">
+            <button type="button" data-device-button="L" class="psp-shoulder left" aria-label="L button"><span>L</span></button>
+            <button type="button" data-device-button="R" class="psp-shoulder right" aria-label="R button"><span>R</span></button>
+            <div class="psp-glass" aria-hidden="true"></div>
+            <div class="psp-screen"><img id="psp-frame" alt="PSP screen" draggable="false" hidden><span id="psp-idle">Awaiting PSP</span></div>
+            <div class="psp-dpad" aria-label="Direction buttons">
+              <button type="button" data-device-button="UP" class="up" aria-label="Up"><i></i></button>
+              <button type="button" data-device-button="LEFT" class="left" aria-label="Left"><i></i></button>
+              <button type="button" data-device-button="RIGHT" class="right" aria-label="Right"><i></i></button>
+              <button type="button" data-device-button="DOWN" class="down" aria-label="Down"><i></i></button>
+            </div>
+            <div class="psp-nub" data-stick="move" aria-label="Drag analog pad"><i></i></div>
+            <div class="psp-face" aria-label="Action buttons">
+              <button type="button" data-device-button="TRIANGLE" class="triangle" aria-label="Triangle"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.6 16.6 15H3.4Z"/></svg></button>
+              <button type="button" data-device-button="CIRCLE" class="circle" aria-label="Circle"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="5.6"/></svg></button>
+              <button type="button" data-device-button="CROSS" class="cross" aria-label="Cross"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5 15 15M15 5 5 15"/></svg></button>
+              <button type="button" data-device-button="SQUARE" class="square" aria-label="Square"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.6" y="4.6" width="10.8" height="10.8"/></svg></button>
+            </div>
+            <div class="psp-speaker left" aria-hidden="true"></div>
+            <div class="psp-speaker right" aria-hidden="true"></div>
+            <span class="psp-led power" id="psp-link-light" aria-hidden="true"></span>
+            <span class="psp-led card" aria-hidden="true"></span>
+            <span class="psp-system home" aria-hidden="true"></span><span class="psp-caption home">HOME</span>
+            <span class="psp-system vol-down" aria-hidden="true"></span><span class="psp-system vol-up" aria-hidden="true"></span><span class="psp-caption vol">− VOL +</span>
+            <span class="psp-system bright" aria-hidden="true"></span><span class="psp-caption bright">◻</span>
+            <span class="psp-system sound" aria-hidden="true"></span><span class="psp-caption sound">♪</span>
+            <button type="button" data-device-button="SELECT" class="psp-pill select" aria-label="Select"></button><span class="psp-caption select">SELECT</span>
+            <button type="button" data-device-button="START" class="psp-pill start" aria-label="Start"></button><span class="psp-caption start">START</span>
+          </div>
+          <p class="psp-status"><strong id="psp-label">PSP</strong> · PSP-1000 layout · HOME, volume, display and sound stay on the console</p>
+        </div>
+        <div id="dual-device" class="dual-device" hidden aria-label="Dual screen device preview">
+          <div class="device-top"><span class="device-camera" aria-hidden="true"></span><span class="device-speaker left" aria-hidden="true"></span><div class="top-screen device-screen"><img id="top-frame" alt="Upper device screen" draggable="false" hidden><span id="top-idle">Awaiting upper screen</span></div><span class="device-speaker right" aria-hidden="true"></span></div>
+          <div class="device-hinge" aria-hidden="true"></div>
+          <div class="device-bottom">
+            <div class="device-readout"><span><i id="device-link-light" aria-hidden="true"></i> LINK</span><strong id="device-label">Remote Pilot</strong><span>LOCAL</span></div>
+            <div class="device-shoulders"><button type="button" data-device-button="ZL" class="device-shoulder zl">ZL</button><button type="button" data-device-button="L" class="device-shoulder l">L</button><button type="button" data-device-button="R" class="device-shoulder r">R</button><button type="button" data-device-button="ZR" class="device-shoulder zr">ZR</button></div>
+            <div class="device-controls"><div class="device-left"><div class="device-stick device-circle" data-stick="move" aria-label="Drag circle pad"><i></i></div><div class="device-dpad" aria-label="Direction buttons"><button type="button" data-device-button="UP" aria-label="Up">▲</button><button type="button" data-device-button="LEFT" aria-label="Left">◀</button><button type="button" data-device-button="RIGHT" aria-label="Right">▶</button><button type="button" data-device-button="DOWN" aria-label="Down">▼</button></div></div><div id="lower-screen" class="bottom-screen device-screen"><img id="bottom-frame" alt="Lower device screen" draggable="false" hidden><span id="bottom-idle">Awaiting lower screen</span></div><div class="device-right"><div class="device-stick device-c-stick" data-stick="look" aria-label="Drag C stick"><i></i></div><div class="device-face" aria-label="Action buttons"><button type="button" data-device-button="X">X</button><button type="button" data-device-button="Y">Y</button><button type="button" data-device-button="A">A</button><button type="button" data-device-button="B">B</button></div></div></div>
+            <div class="device-footer"><button type="button" data-device-button="SELECT">SELECT</button><span class="device-home">HOME</span><button type="button" data-device-button="START">START</button></div>
+          </div>
+        </div>
+      </div>
+      <p id="display-help" class="micro">Device touch input is available when the selected preset declares a touch region.</p>
+      <div class="toolbar">
+        <button id="capture" type="button">Grab full capture</button>
+        <label><input id="live" type="checkbox"> Live preview</label>
+        <label><input id="sound" type="checkbox"> Sound</label>
+        <label>Maximum rate <select id="rate"><option value="1000">1 fps</option><option value="500" selected>2 fps</option><option value="200">5 fps</option><option value="100">10 fps</option></select></label>
+        <label>Full capture includes <select id="diagnostic" aria-label="Full capture includes"><option value="">Screens only</option><option value="log">Screens + device log</option><option value="report">Screens + report</option></select></label>
+      </div>
+      <p class="micro capture-explain">This choice applies when you press Grab full capture. Device logs and reports appear only if the selected build supports them.</p>
+      <div class="perf"><div class="heading"><h3>Performance</h3><label><input id="perf-toggle" type="checkbox"> Performance capture</label><span id="perf-detail" class="muted">Waiting for device timing</span></div><canvas id="perf-graph" hidden width="640" height="140" aria-label="Recent frame times"></canvas><p class="micro">Frame interval (light) · work time (accent) · 16.7 ms guide · <span id="perf-scale">0–33.4 ms</span></p></div>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="control-title">
+        <div class="heading"><div><p class="eyebrow">REMOTE INPUT</p><h2 id="control-title">Controls</h2></div><span id="controller-state" class="muted">Off</span></div>
+        <label class="enable"><input id="controls-enabled" type="checkbox"> Enable mouse and controller input</label>
+        <p class="micro">Input runs only while this tab is visible and focused. Physical device input takes priority when the integration supports it.</p>
+        <div class="sticks"><div class="stick-wrap"><div class="stick" data-stick="move" aria-label="Drag movement stick"><i></i></div><span>MOVE</span></div><div class="stick-wrap"><div class="stick" data-stick="look" aria-label="Drag look stick"><i></i></div><span>LOOK</span></div></div>
+        <div id="buttons" class="buttons" aria-label="Bounded button presses"></div>
+        <p id="control-help" class="micro">Buttons appear from the selected preset.</p>
+      </section>
+      <section class="panel" aria-labelledby="console-title">
+        <div class="heading"><div><p class="eyebrow">MANUAL QA</p><h2 id="console-title">Console and actions</h2></div></div>
+        <form id="console-form"><label for="console">Device console command</label><div class="inline"><input id="console" maxlength="127" autocomplete="off" placeholder="Command supplied by the integrated build"><button type="submit">Send</button></div></form>
+        <div class="action-row"><button id="report" class="secondary" type="button">Save report</button><button id="log" class="secondary" type="button">Read device log</button><button id="perf-request" class="secondary" type="button">Read timing</button></div>
+      </section>
+      <section class="panel" aria-labelledby="colors-title"><div class="heading"><div><p class="eyebrow">APPEARANCE</p><h2 id="colors-title">Preset colors</h2></div></div><div class="colors"><label>Background <input id="color-background" type="color"></label><label>Surface <input id="color-surface" type="color"></label><label>Accent <input id="color-accent" type="color"></label><label>Text <input id="color-text" type="color"></label></div><div class="action-row"><button id="colors-save" class="secondary" type="button">Save colors</button><button id="colors-reset" class="quiet" type="button">Restore preset</button></div></section>
+    </div>
+  </div>
+
+  <section id="files-panel" class="panel" hidden aria-labelledby="files-title"><div class="heading"><div><p class="eyebrow">MEMORY STICK</p><h2 id="files-title">PSP folders</h2></div><span id="files-path" class="muted">ms0:/</span></div>
+    <p class="micro">Read-only. Logs, crash reports and pictures are copied to this computer's private captures folder; nothing on the PSP is changed. The device never lists or sends its pairing file.</p>
+    <div class="action-row"><button id="files-up" class="secondary" type="button">Up</button><button id="files-refresh" class="secondary" type="button">Refresh</button>
+      <button id="files-logs" class="quiet" type="button">halo/log</button><button id="files-games" class="quiet" type="button">PSP/GAME</button><button id="files-pictures" class="quiet" type="button">PICTURE</button></div>
+    <div class="files-layout"><ul id="files-list" class="files-list" aria-label="Folder contents"></ul>
+      <div class="files-preview"><p id="files-preview-name" class="muted">Choose a file to copy it here and preview it.</p><img id="files-image" alt="Copied image" hidden><pre id="files-text" hidden></pre><button id="files-save" class="secondary" type="button" hidden>Save copy</button></div></div>
+  </section>
+
+  <section id="backup-panel" class="panel" hidden aria-labelledby="backup-title"><div class="heading"><div><p class="eyebrow">SYSTEM SETTINGS</p><h2 id="backup-title">PSP settings backup</h2></div><span id="backup-step" class="muted">Not started</span></div>
+    <p class="micro">Copies the PSP's system settings (its theme, date and time, nickname, and network connections with their Wi-Fi passwords) into a new folder in ms0:/BACKUP, then to this computer, and checks every file against what the PSP read. The settings themselves are only read, never changed. Keep these copies private: never attach them to a bug report.</p>
+    <div class="action-row"><button id="backup-make" type="button">Back up PSP settings</button><button id="backup-card" class="secondary" type="button">Copy a backup made on the PSP</button><button id="backup-refresh" class="quiet" type="button">Check copies again</button></div>
+    <ul id="backup-card-list" class="files-list backup-card-list" aria-label="Backups on the Memory Stick" hidden></ul>
+    <ul id="backup-list" class="backup-list" aria-label="Backups on this computer"></ul>
+    <div class="restore-how"><p class="eyebrow">PUTTING A BACKUP BACK</p>
+      <ol><li>On the PSP, open RemotePilot PSP and press <b>□ Restore</b>.</li><li>Pick a backup, then <b>✕</b>: it checks the copies and shows what will change.</li><li>Hold <b>✕</b> for two seconds. Each file is written and read back, then the PSP restarts.</li></ol>
+      <p class="micro">Only the PSP can restore, with its own buttons: nothing on the network can write your settings. RemotePilot PSP also tells you at start whether your settings still match your newest backup.</p></div>
+  </section>
+
+  <section id="catalog-panel" class="panel" hidden aria-labelledby="catalog-title"><div class="heading"><div><p class="eyebrow">DEVICE CATALOG</p><h2 id="catalog-title">Installed content</h2></div></div><p class="micro">Catalog entries describe content; previews require the device to be in a safe menu state.</p><div id="catalog"></div></section>
+  <section class="panel" aria-labelledby="activity-title"><div class="heading"><div><p class="eyebrow">SESSION</p><h2 id="activity-title">Requests and captures</h2></div></div><p id="feedback" role="status" class="feedback"></p><div id="activity" class="activity"></div></section>
+  <footer><span>Remote Pilot runs on this computer. Pairing files and captures stay in its private local folder.</span></footer>
+</main>
+</body>
+</html>

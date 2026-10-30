@@ -1,0 +1,22 @@
+{
+  "id": "example",
+  "name": "Example",
+  "order": 0,
+  "mark": "R",
+  "transport": "example-offline",
+  "capabilities": ["touch"],
+  "display": {"layout": "dual-screen", "width": 400, "height": 480,
+    "touch": {"x": 40, "y": 240, "width": 320, "height": 240, "deviceWidth": 320, "deviceHeight": 240}},
+  "buttons": ["A", "B", "X", "Y", "UP", "DOWN", "LEFT", "RIGHT", "L", "R", "ZL", "ZR", "START", "SELECT"],
+  "theme": {
+    "background": "#091612",
+    "surface": "#10251d",
+    "surface2": "#0d1e18",
+    "line": "#3d7761",
+    "text": "#e5fff0",
+    "muted": "#a8cdb9",
+    "accent": "#55e59a",
+    "accent2": "#b2ffd5",
+    "glow": "#34bf7d"
+  }
+}

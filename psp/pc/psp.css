@@ -1,0 +1,162 @@
+/* PSP section: an original drawing of a PSP-1000 (no console artwork or
+logos), laid out on the console's 170 x 74 mm front: every part is placed
+by its position in millimetres, as left = x / 170, top = y / 74. Then the
+folders panel and the Options menu. */
+.display.psp{aspect-ratio:auto!important;display:block;overflow:visible;border:0;background:transparent!important;padding:0;min-height:0;touch-action:none}
+.display.psp>#frame,.display.psp>#placeholder{display:none!important}
+/* the viewer styles every .display span; these spans are the console's own */
+.psp-shell span{position:absolute;padding:0;margin:0;font-size:inherit;color:inherit;text-align:center;line-height:1}
+.psp-device{width:100%;max-width:1020px;margin:30px auto 4px}
+.psp-shell{position:relative;isolation:isolate;aspect-ratio:170/74;container-type:inline-size;--ink:#d9dde3;--key:#1c1e22;--key2:#2b2e34}
+/* the body: gloss black, its ends nearly half circles (37 mm radius) */
+.psp-shell::before{content:"";position:absolute;inset:0;z-index:1;border-radius:21.8%/50%;border:1px solid #3b3f46;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,#ffffff1c,transparent 70%),linear-gradient(180deg,#26282d 0%,#121316 45%,#0a0b0d 100%);
+  box-shadow:0 22px 44px #000b,inset 0 2px 0 #ffffff22,inset 0 -3px 8px #000c}
+.psp-shell>*:not(.psp-shoulder){position:absolute;z-index:2}
+/* the shoulder buttons wrap the top corners, behind the body's edge */
+.psp-shoulder{position:absolute;z-index:0;top:-6%;width:24%;height:16%;padding:0;border:1px solid #3b3f46;background:linear-gradient(180deg,#34373d,#16171a);color:var(--ink);font-size:clamp(8px,1.1cqw,12px);font-weight:700}
+.psp-shoulder.left{left:5.5%;border-radius:70% 12% 0 0/100% 60% 0 0}
+.psp-shoulder.right{right:5.5%;border-radius:12% 70% 0 0/60% 100% 0 0}
+.psp-shell .psp-shoulder span{position:absolute;top:8%;width:100%;left:0;text-align:center}
+.psp-shoulder.left span{left:-12%}
+.psp-shoulder.right span{left:12%}
+/* the glass panel around the screen, x 33-137, y 3-64.5 mm */
+.psp-glass{left:19.41%;width:61.18%;top:4.05%;height:83.11%;border-radius:1.4%/3.2%;background:linear-gradient(160deg,#ffffff14 0%,transparent 28%),#040506;box-shadow:inset 0 0 0 1px #2a2d33}
+/* the screen, 95 x 54 mm: x 37.5-132.5, y 6.5-60.5 */
+.psp-screen{left:22.06%;width:55.88%;top:8.78%;height:72.97%;display:grid;place-items:center;overflow:hidden;background:#000;box-shadow:0 0 0 1px #181a1f}
+.psp-screen img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.psp-shell .psp-screen span{position:static;color:var(--accent2);font-size:clamp(9px,1.3cqw,14px);font-weight:650;letter-spacing:.03em;text-align:center;padding:0 8%}
+/* the D-pad: four separate arrow-pointed keys, centred at (18, 26), 23 mm across */
+.psp-dpad{left:10.59%;top:35.14%;width:13.53%;aspect-ratio:1;transform:translate(-50%,-50%)}
+.psp-dpad button{position:absolute;padding:0;border:0;background:linear-gradient(145deg,var(--key2),var(--key) 70%);cursor:pointer}
+.psp-dpad .up{left:34%;top:0;width:32%;height:40%;clip-path:polygon(0 0,100% 0,100% 72%,50% 100%,0 72%)}
+.psp-dpad .down{left:34%;bottom:0;width:32%;height:40%;clip-path:polygon(0 28%,50% 0,100% 28%,100% 100%,0 100%)}
+.psp-dpad .left{left:0;top:34%;width:40%;height:32%;clip-path:polygon(0 0,72% 0,100% 50%,72% 100%,0 100%)}
+.psp-dpad .right{right:0;top:34%;width:40%;height:32%;clip-path:polygon(28% 0,100% 0,100% 100%,28% 100%,0 50%)}
+.psp-dpad i{position:absolute;width:0;height:0;border:solid transparent}
+.psp-dpad .up i{left:50%;top:22%;transform:translateX(-50%);border-width:0 .55cqw .75cqw;border-bottom-color:var(--ink)}
+.psp-dpad .down i{left:50%;bottom:22%;transform:translateX(-50%);border-width:.75cqw .55cqw 0;border-top-color:var(--ink)}
+.psp-dpad .left i{top:50%;left:22%;transform:translateY(-50%);border-width:.55cqw .75cqw .55cqw 0;border-right-color:var(--ink)}
+.psp-dpad .right i{top:50%;right:22%;transform:translateY(-50%);border-width:.55cqw 0 .55cqw .75cqw;border-left-color:var(--ink)}
+/* the analog pad: a flat disc in a round recess, at (15, 49.5) */
+.psp-nub{left:8.82%;top:66.89%;width:7.65%;aspect-ratio:1;transform:translate(-50%,-50%);display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,#0b0c0e 60%,#1d1f24 100%);box-shadow:inset 0 2px 5px #000d,0 1px 0 #ffffff1a;cursor:grab;touch-action:none}
+.psp-nub i{display:block;width:70%;aspect-ratio:1;border-radius:50%;pointer-events:none;background:repeating-radial-gradient(circle,#4a4e56 0 1.5px,#3b3f46 1.5px 3px);box-shadow:0 2px 4px #000c,inset 0 1px 1px #ffffff2a}
+.psp-nub:active{cursor:grabbing}
+/* the face buttons: a diamond centred at (152, 27), 23 mm across */
+.psp-face{left:89.41%;top:36.49%;width:13.53%;aspect-ratio:1;transform:translate(-50%,-50%)}
+.psp-face button{position:absolute;width:36%;aspect-ratio:1;padding:0;border-radius:50%;border:1px solid #3a3d44;background:radial-gradient(circle at 40% 30%,var(--key2),var(--key) 70%);box-shadow:0 2px 3px #000b;display:grid;place-items:center;cursor:pointer}
+.psp-face .triangle{left:32%;top:0}
+.psp-face .circle{right:0;top:32%}
+.psp-face .cross{left:32%;bottom:0}
+.psp-face .square{left:0;top:32%}
+.psp-face svg{width:68%;height:68%;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.psp-face .triangle svg{stroke:#4cc38c}
+.psp-face .circle svg{stroke:#ef5e5e}
+.psp-face .cross svg{stroke:#63a2ee}
+.psp-face .square svg{stroke:#e786cf}
+/* speakers below the pad and the face buttons, at (13, 64) and (157, 64) */
+.psp-shell .psp-speaker{top:86.49%;width:5.9%;height:5.4%;transform:translate(-50%,-50%);border-radius:40%;background:radial-gradient(circle,#000 0 .9px,transparent 1.2px) 0 0/4px 4px}
+.psp-shell .psp-speaker.left{left:7.65%}
+.psp-shell .psp-speaker.right{left:92.35%}
+/* indicator lights, at (25, 69.5) and (28.5, 69.5) */
+.psp-shell .psp-led{top:93.92%;width:.9%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:#2a2d33;box-shadow:inset 0 1px 1px #000}
+.psp-shell .psp-led.power{left:14.71%}
+.psp-shell .psp-led.card{left:16.76%}
+.psp-shell .psp-led.power.on{background:#5ee08f;box-shadow:0 0 6px #5ee08f}
+/* the row under the screen, buttons at y 69.5 mm, their captions above at y 66.3 mm */
+.psp-shell .psp-system,.psp-pill{top:93.92%;transform:translate(-50%,-50%);border:1px solid #3a3d44;background:linear-gradient(180deg,var(--key2),var(--key));padding:0}
+.psp-shell .psp-system{height:3.9%;width:2.4%;border-radius:999px;opacity:.75}
+.psp-shell .psp-system.home{left:25.88%;width:5.3%}
+.psp-shell .psp-system.vol-down{left:32.94%}
+.psp-shell .psp-system.vol-up{left:37.06%}
+.psp-shell .psp-system.bright{left:44.71%}
+.psp-shell .psp-system.sound{left:50%}
+.psp-pill{height:4.3%;width:4.4%;border-radius:999px;cursor:pointer}
+.psp-pill.select{left:64.71%}
+.psp-pill.start{left:72.35%}
+.psp-shell .psp-caption{top:89.6%;transform:translate(-50%,-50%);color:#9da3ad;font-size:clamp(6px,.85cqw,10px);font-weight:700;letter-spacing:.08em;white-space:nowrap;pointer-events:none}
+.psp-shell .psp-caption.home{left:25.88%}
+.psp-shell .psp-caption.vol{left:35%}
+.psp-shell .psp-caption.bright{left:44.71%}
+.psp-shell .psp-caption.sound{left:50%}
+.psp-shell .psp-caption.select{left:64.71%}
+.psp-shell .psp-caption.start{left:72.35%}
+.psp-status{margin:14px 0 0;text-align:center;color:var(--muted);font-size:.78rem}
+.psp-device button:hover:not(:disabled){filter:brightness(1.35)}
+.psp-device button:disabled{cursor:default}
+.display.psp:not(.controls-on) .psp-nub{cursor:default}
+.options{position:relative}
+.options-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:300px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 14px 30px #000a;display:grid;gap:6px}
+.options-menu[hidden]{display:none}
+.options-menu button{text-align:left}
+.options-menu p{margin:4px 2px 0}
+.files-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;margin-top:12px}
+.files-list{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.files-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:2px 10px;border-bottom:1px solid color-mix(in srgb,var(--line) 45%,transparent)}
+.files-list li button{flex:1;text-align:left;background:transparent;border:0;color:var(--text);padding:7px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.files-list li button.folder{color:var(--accent2);font-weight:700}
+.files-list li span{font-size:.75rem;white-space:nowrap}
+.files-preview{min-width:0}
+.files-preview img{max-width:100%;border:1px solid var(--line);border-radius:6px;image-rendering:pixelated;background:#000}
+.files-preview pre{max-height:360px;overflow:auto;margin:0 0 10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface2);font-size:.74rem;white-space:pre-wrap;word-break:break-word}
+@media(max-width:720px){.files-layout{grid-template-columns:1fr}}
+/* the local bug report */
+.bug-dialog{width:min(560px,calc(100vw - 32px));border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);padding:20px;box-shadow:0 20px 50px #000c}
+.bug-dialog::backdrop{background:#000a}
+.bug-dialog h2{margin:0 0 6px}
+.bug-dialog label{display:block;color:var(--muted);font-size:.8rem;margin:10px 0 4px}
+.bug-dialog label.enable{display:flex;margin-top:12px}
+.bug-dialog textarea{width:100%;box-sizing:border-box;font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:7px;padding:8px}
+.bug-dialog .backup-list{max-height:180px;overflow:auto}
+/* the settings backup */
+.backup-card-list{margin-top:12px;max-height:200px}
+.backup-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;font-size:.8rem}
+.backup-list li{display:grid;gap:3px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface2)}
+.backup-list code{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere}
+#backup-panel .problem{color:#ff9b8a}
+#backup-panel .good{color:var(--accent2)}
+
+/* the PSP guide: the PSP's own look (night blue, accent glow, gold "do this now") */
+.psp-guide{position:relative;overflow:hidden;border-radius:20px;background:radial-gradient(ellipse 70% 90% at 100% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 60%),linear-gradient(160deg,var(--surface),var(--surface2))}
+.psp-guide::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(color-mix(in srgb,var(--line) 35%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--line) 35%,transparent) 1px,transparent 1px);background-size:32px 32px;-webkit-mask-image:linear-gradient(180deg,#000a,transparent 70%);mask-image:linear-gradient(180deg,#000a,transparent 70%)}
+.psp-guide>*{position:relative}
+.guide-top{display:flex;align-items:center;gap:14px}
+.guide-top>div{flex:1}
+.guide-top h2{margin:0}
+.guide-emblem{width:54px;height:54px;flex:none}
+.guide-emblem circle{fill:color-mix(in srgb,var(--background) 80%,transparent);stroke:var(--accent);stroke-width:2}
+.guide-emblem path{fill:none;stroke:var(--accent2);stroke-width:4;stroke-linecap:round}
+.guide-emblem .dot{fill:var(--text);stroke:none}
+.guide-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:.75rem;font-weight:800;background:var(--surface2)}
+.guide-badge i{width:9px;height:9px;border-radius:50%;background:var(--muted);box-shadow:0 0 10px currentColor}
+.psp-guide[data-tone=action] .guide-badge i{background:#ffd678;color:#ffd678}
+.psp-guide[data-tone=wait] .guide-badge i{background:var(--accent);color:var(--accent)}
+.psp-guide[data-tone=done] .guide-badge i{background:#6ee7a0;color:#6ee7a0}
+.psp-guide[data-tone=done]{border-color:#6ee7a0}
+#guide-title{font-size:1.35rem;margin:16px 0 12px}
+.guide-steps{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;padding:0;margin:0 0 16px;counter-reset:step}
+.guide-steps li{position:relative;text-align:center;font-size:.76rem;color:var(--muted);padding-top:30px;counter-increment:step}
+.guide-steps li::before{content:counter(step);position:absolute;top:0;left:calc(50% - 12px);width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--surface2);display:grid;place-items:center;font-weight:800;color:var(--muted)}
+.guide-steps li::after{content:"";position:absolute;top:12px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:var(--line)}
+.guide-steps li:last-child::after{display:none}
+.guide-steps li.done{color:var(--text)}
+.guide-steps li.done::before{content:"✓";background:var(--accent);border-color:var(--accent);color:var(--background)}
+.guide-steps li.done::after{background:var(--accent)}
+.guide-steps li.current{color:var(--text);font-weight:800}
+.guide-steps li.current::before{border-color:#ffd678;color:#ffd678}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.guide-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:color-mix(in srgb,var(--surface2) 85%,transparent)}
+.guide-cue{display:inline-block;margin:6px 0 10px;padding:9px 14px;border:2px solid #ffd678;border-radius:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:var(--text);background:#ffd6781a}
+.psp-guide[data-tone=done] .guide-cue{border-color:#6ee7a0;background:#6ee7a01a}
+.guide-text{margin:0;font-size:.88rem;line-height:1.5}
+.guide-next{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);color:var(--accent2);font-size:.84rem}
+.restore-how{margin-top:16px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px}
+.restore-how ol{margin:6px 0;padding-left:20px;font-size:.84rem;line-height:1.6}
+@media(prefers-reduced-motion:no-preference){
+  .psp-guide[data-tone=action] .guide-cue{animation:guide-pulse 1.4s ease-in-out infinite}
+  .guide-emblem path{animation:guide-wave 2.4s ease-in-out infinite}
+  .guide-emblem path:nth-of-type(2){animation-delay:.2s}
+}
+@keyframes guide-pulse{50%{box-shadow:0 0 0 6px #ffd67833}}
+@keyframes guide-wave{50%{opacity:.45}}
+@media(max-width:720px){.guide-grid{grid-template-columns:1fr}}
