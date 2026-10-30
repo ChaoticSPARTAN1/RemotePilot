@@ -1,0 +1,22 @@
+# rp_flash.prx, the kernel helper for the settings restore's writes
+# (flash/main.c). Built by psp/tools/build_psp.py beside the EBOOT:
+#   make -f <SRC>/flash/Makefile.flash SRC=<SRC>
+SRC ?= ..
+VPATH = $(SRC)/flash $(SRC) $(SRC)/third_party
+
+TARGET = rp_flash
+OBJS = main.o rp2_flash_copy.o sha256_hmac.o
+
+INCDIR = $(SRC)
+CFLAGS = -O2 -G0 -Wall -Wextra -Werror -Wno-unused-parameter
+LIBDIR =
+LDFLAGS =
+LIBS =
+
+BUILD_PRX = 1
+USE_KERNEL_LIBC = 1
+USE_KERNEL_LIBS = 1
+PSP_FW_VERSION = 661
+
+PSPSDK = $(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak

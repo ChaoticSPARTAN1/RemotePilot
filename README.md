@@ -12,7 +12,15 @@ For CIA transfers, wireless companion updates and the original 3DS dashboards,
 use the separate **[3DS tool bundle](3ds/README.md)**. It includes the PC tool,
 main/Recovery CIA and 3DSX builds, matching source, artwork, setup instructions
 and security/legal review. All platform-specific additions live under `3ds/`.
-The native companion is GPL-3.0-only; the independent PC code remains MIT.
+
+The 3DS native companion is GPL-3.0-only; the independent PC code remains MIT.
+
+For the PSP, use the **[PSP section](psp/README.md)**: the RemotePilot PSP
+companion (a guided on-console app: settings backup and restore, Wi-Fi check,
+live view and remote control), its PC viewer section and the **PSP · Homebrew**
+preset, a template for any PSP build that answers RemotePilot's RP2 protocol.
+It lives under `psp/` and is MIT, apart from the third-party pieces in
+[psp/NOTICE.md](psp/NOTICE.md).
 The current 0.8.0 release is a preview pending fresh hardware validation.
 
 Install Python 3.11 or newer. On Windows, open `run.cmd`; on macOS or Linux, run
@@ -86,6 +94,11 @@ includes `local/` or other unlisted files.
 Remote Pilot's original source is licensed under [MIT](LICENSE), copyright
 2026 Kevin Boggs. Integrations must keep their own third-party notices and
 obtain permission for any media they distribute.
+
+Remote Pilot is an independent project, not affiliated with, endorsed by or
+sponsored by Nintendo, Sony Interactive Entertainment, Microsoft, Halo Studios
+or Bungie. Nintendo 3DS, PSP and PlayStation, and Halo are their owners'
+trademarks, named only to say what the tools work with.
 
 ### Performance capture
 
